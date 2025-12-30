@@ -27,3 +27,6 @@ dist-ssr
 CLAUDE.md
 Project-Plan.md
 Architecture.md
+
+#env
+.env
