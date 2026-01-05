@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
 			setupFiles: ['./src/test/setup.ts'],
 			env: {
 				VITE_API_URL: env.VITE_API_URL,
+				VITE_API_KEY: env.VITE_API_KEY,
 			},
 		},
 		resolve: {
