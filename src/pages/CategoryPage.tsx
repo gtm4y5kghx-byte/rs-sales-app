@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useContent } from '@/hooks/useContent';
+import ContentGrid from '@/components/ContentGrid';
 
 const CategoryPage = () => {
 	const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ const CategoryPage = () => {
 	const category = categories.find((c) => c.id === Number(id));
 
 	if (filteredItems.length === 0) {
-		return <p className="text-gray-600">No assets in this category.</p>;
+		return <p className="text-muted-foreground">No assets in this category.</p>;
 	}
 
 	return (
@@ -24,7 +25,7 @@ const CategoryPage = () => {
 			<h1 className="mb-4 text-xl font-semibold">
 				{category?.name ?? 'Category'} ({filteredItems.length})
 			</h1>
-			<p>Content grid will go here</p>
+			<ContentGrid items={filteredItems} />
 		</div>
 	);
 };

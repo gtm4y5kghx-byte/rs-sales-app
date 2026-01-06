@@ -1,4 +1,6 @@
 import { useContent } from '@/hooks/useContent';
+import ContentGrid from '@/components/ContentGrid';
+import { Button } from '@/components/ui/button';
 
 const BrowsePage = () => {
 	const { items } = useContent();
@@ -7,10 +9,8 @@ const BrowsePage = () => {
 		return (
 			<div className="flex h-full items-center justify-center">
 				<div className="text-center">
-					<p className="mb-4 text-gray-600">No content synced yet.</p>
-					<button className="rounded bg-blue-600 px-4 py-2 text-white">
-						Sync Now
-					</button>
+					<p className="mb-4 text-muted-foreground">No content synced yet.</p>
+					<Button>Sync Now</Button>
 				</div>
 			</div>
 		);
@@ -21,7 +21,7 @@ const BrowsePage = () => {
 			<h1 className="mb-4 text-xl font-semibold">
 				All Assets ({items.length})
 			</h1>
-			<p>Content grid will go here</p>
+			<ContentGrid items={items} />
 		</div>
 	);
 };
