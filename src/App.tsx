@@ -1,8 +1,17 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import BrowsePage from '@/pages/BrowsePage';
+import CategoryPage from '@/pages/CategoryPage';
+import AssetPage from '@/pages/AssetPage';
+
 const App = () => {
 	return (
-		<div className="p-8 text-2xl font-bold text-blue-600">
-			Tailwind is working
-		</div>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<BrowsePage />} />
+				<Route path="/category/:id" element={<CategoryPage />} />
+				<Route path="/asset/:id" element={<AssetPage />} />
+			</Routes>
+		</BrowserRouter>
 	);
 };
 
