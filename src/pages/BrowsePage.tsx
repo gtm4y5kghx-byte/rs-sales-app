@@ -1,11 +1,29 @@
 import { useContent } from '@/hooks/useContent';
-import ContentGrid from '@/components/ContentGrid';
+import ContentSection from '@/components/ContentSection';
 import { Button } from '@/components/ui/button';
 import { ContentItem } from '@/types';
 
+const mockTitles = [
+	'Product Datasheet',
+	'Installation Guide',
+	'Safety Manual',
+	'Quick Start Guide',
+	'Technical Specifications',
+	'Warranty Information',
+	'Troubleshooting Guide',
+	'User Manual',
+	'Product Overview',
+	'Maintenance Schedule',
+	'Parts Catalog',
+	'Training Materials',
+	'Sales Brochure',
+	'Case Study',
+	'White Paper',
+];
+
 const mockItems: ContentItem[] = Array.from({ length: 100 }, (_, i) => ({
 	id: i + 1,
-	title: `Asset ${i + 1}`,
+	title: `${mockTitles[i % mockTitles.length]} ${Math.floor(i / mockTitles.length) + 1}`,
 	type: i % 3 === 0 ? 'pdf' : 'image',
 	url: `https://placehold.co/400x300?text=Asset+${i + 1}`,
 	thumbnail: `https://placehold.co/400x300?text=Asset+${i + 1}`,
@@ -31,14 +49,7 @@ const BrowsePage = () => {
 		);
 	}
 
-	return (
-		<div className="flex h-full flex-col">
-			<h1 className="mb-4 text-xl font-semibold">
-				All Assets ({displayItems.length})
-			</h1>
-			<ContentGrid items={displayItems} />
-		</div>
-	);
+	return <ContentSection title="All Assets" items={displayItems} />;
 };
 
 export default BrowsePage;

@@ -13,6 +13,7 @@ export const buildSearchIndex = (items: ContentItem[]): SearchIndex => {
 		searchOptions: {
 			prefix: true,
 			fuzzy: false,
+			combineWith: 'AND',
 		},
 	});
 

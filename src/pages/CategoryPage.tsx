@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useContent } from '@/hooks/useContent';
-import ContentGrid from '@/components/ContentGrid';
+import ContentSection from '@/components/ContentSection';
 
 const CategoryPage = () => {
 	const { id } = useParams<{ id: string }>();
@@ -21,12 +21,10 @@ const CategoryPage = () => {
 	}
 
 	return (
-		<div>
-			<h1 className="mb-4 text-xl font-semibold">
-				{category?.name ?? 'Category'} ({filteredItems.length})
-			</h1>
-			<ContentGrid items={filteredItems} />
-		</div>
+		<ContentSection
+			title={category?.name ?? 'Category'}
+			items={filteredItems}
+		/>
 	);
 };
 
