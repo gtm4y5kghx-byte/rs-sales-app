@@ -18,8 +18,10 @@ export const useSync = () => {
 			});
 			setLastSynced(new Date().toISOString());
 			setSyncStatus('idle');
+			return true;
 		} catch {
 			setSyncStatus('error');
+			return false;
 		} finally {
 			setSyncProgress(null);
 		}

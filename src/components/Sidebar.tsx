@@ -3,6 +3,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { useContent } from '@/hooks/useContent';
 import { cn } from '@/lib/utils';
+import SyncStatus from '@/components/SyncStatus';
 
 const Sidebar = () => {
 	const { categories } = useContent();
@@ -40,6 +41,8 @@ const Sidebar = () => {
 					))}
 				</nav>
 			</ScrollArea>
+
+			<SyncStatus />
 		</aside>
 	);
 };
