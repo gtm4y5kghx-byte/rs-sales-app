@@ -16,6 +16,8 @@ interface StoreState {
 	setSyncStatus: (status: SyncStatus) => void;
 	setSyncProgress: (progress: SyncProgress | null) => void;
 	setLastSynced: (timestamp: string | null) => void;
+	pendingUpdates: number;
+	setPendingUpdates: (count: number) => void;
 }
 
 export const useStore = create<StoreState>((set, get) => ({
@@ -37,4 +39,6 @@ export const useStore = create<StoreState>((set, get) => ({
 	setSyncStatus: (status) => set({ syncStatus: status }),
 	setSyncProgress: (progress) => set({ syncProgress: progress }),
 	setLastSynced: (timestamp) => set({ lastSynced: timestamp }),
+	pendingUpdates: 0,
+	setPendingUpdates: (count) => set({ pendingUpdates: count }),
 }));

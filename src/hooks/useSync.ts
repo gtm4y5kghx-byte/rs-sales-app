@@ -1,5 +1,8 @@
 import { useStore } from '@/store/store';
-import { syncContent } from '@/services/sync';
+import {
+	syncContent,
+	checkForUpdates as checkForUpdatesService,
+} from '@/services/sync';
 
 export const useSync = () => {
 	const status = useStore((state) => state.syncStatus);
@@ -8,6 +11,8 @@ export const useSync = () => {
 	const setSyncStatus = useStore((state) => state.setSyncStatus);
 	const setSyncProgress = useStore((state) => state.setSyncProgress);
 	const setLastSynced = useStore((state) => state.setLastSynced);
+	const pendingUpdates = useStore((state) => state.pendingUpdates);
+	const setPendingUpdates = useStore((state) => state.setPendingUpdates);
 
 	const sync = async () => {
 		setSyncStatus('downloading');
@@ -18,6 +23,7 @@ export const useSync = () => {
 			});
 			setLastSynced(new Date().toISOString());
 			setSyncStatus('idle');
+			setPendingUpdates(0);
 			return true;
 		} catch {
 			setSyncStatus('error');
@@ -27,10 +33,23 @@ export const useSync = () => {
 		}
 	};
 
+	const checkForUpdates = async () => {
+		try {
+			const count = await checkForUpdatesService();
+			setPendingUpdates(count);
+			return count;
+		} catch {
+			setPendingUpdates(0);
+			return 0;
+		}
+	};
+
 	return {
 		status,
 		progress,
 		lastSynced,
+		pendingUpdates,
 		sync,
+		checkForUpdates,
 	};
 };

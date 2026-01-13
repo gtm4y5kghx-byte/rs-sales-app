@@ -38,4 +38,31 @@ describe('useSync', () => {
 
 		expect(syncService.syncContent).toHaveBeenCalled();
 	});
+
+	it('checkForUpdates fetches count and updates store', async () => {
+		vi.mocked(syncService.checkForUpdates).mockResolvedValue(5);
+
+		const { result } = renderHook(() => useSync());
+
+		await act(async () => {
+			await result.current.checkForUpdates();
+		});
+
+		expect(syncService.checkForUpdates).toHaveBeenCalled();
+		expect(useStore.getState().pendingUpdates).toBe(5);
+	});
+
+	it('checkForUpdates sets pendingUpdates to 0 on error', async () => {
+		vi.mocked(syncService.checkForUpdates).mockRejectedValue(
+			new Error('Network error'),
+		);
+
+		const { result } = renderHook(() => useSync());
+
+		await act(async () => {
+			await result.current.checkForUpdates();
+		});
+
+		expect(useStore.getState().pendingUpdates).toBe(0);
+	});
 });

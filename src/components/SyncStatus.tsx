@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useSync } from '@/hooks/useSync';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,20 @@ const formatRelativeTime = (isoString: string): string => {
 
 const SyncStatus = () => {
 	const isOnline = useOnlineStatus();
-	const { status, progress, lastSynced, sync } = useSync();
+	const {
+		status,
+		progress,
+		lastSynced,
+		pendingUpdates,
+		sync,
+		checkForUpdates,
+	} = useSync();
+
+	useEffect(() => {
+		if (isOnline) {
+			checkForUpdates();
+		}
+	}, [isOnline, checkForUpdates]);
 
 	const handleSync = async () => {
 		const success = await sync();
@@ -49,6 +63,12 @@ const SyncStatus = () => {
 			{lastSynced && (
 				<p className="text-xs text-muted-foreground">
 					Last synced: {formatRelativeTime(lastSynced)}
+				</p>
+			)}
+
+			{pendingUpdates > 0 && (
+				<p className="text-xs font-medium">
+					{pendingUpdates} update{pendingUpdates !== 1 ? 's' : ''} available
 				</p>
 			)}
 

@@ -186,7 +186,7 @@ describe('sync service', () => {
 
 			const count = await checkForUpdates();
 
-			expect(count).toBeGreaterThanOrEqual(0);
+			expect(count).toBeGreaterThanOrEqual(1);
 		});
 	});
 });
