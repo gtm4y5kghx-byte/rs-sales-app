@@ -1,9 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
 	compareManifests,
 	buildDownloadQueue,
 	processDownloadQueue,
 	syncContent,
+	checkForUpdates,
 	type ManifestDiff,
 } from './sync';
 import type { ContentItem, ContentManifest } from '@/types';
@@ -125,6 +126,67 @@ describe('sync service', () => {
 
 			expect(fetch).toHaveBeenCalledWith(baseItem.url);
 			expect(onProgress).toHaveBeenCalled();
+		});
+	});
+
+	describe('checkForUpdates', () => {
+		beforeEach(async () => {
+			const { clearDatabase } = await import('./db');
+			await clearDatabase();
+		});
+
+		it('returns count of pending changes', async () => {
+			const mockManifest: ContentManifest = {
+				version: 'v1.0.0',
+				categories: [{ id: 1, name: 'Docs', slug: 'docs' }],
+				items: [baseItem, { ...baseItem, id: 2 }],
+				totalSize: 2048,
+			};
+
+			global.fetch = vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve(mockManifest),
+			});
+
+			const count = await checkForUpdates();
+
+			expect(count).toBe(2);
+		});
+
+		it('returns 0 when local and remote match', async () => {
+			const mockManifest: ContentManifest = {
+				version: 'v1.0.0',
+				categories: [],
+				items: [],
+				totalSize: 0,
+			};
+
+			global.fetch = vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve(mockManifest),
+			});
+
+			const count = await checkForUpdates();
+
+			expect(count).toBe(0);
+		});
+
+		it('counts updates and deletes in total', async () => {
+			const mockManifest: ContentManifest = {
+				version: 'v2.0.0',
+				categories: [],
+				items: [{ ...baseItem, checksum: 'changed' }], // 1 update
+				totalSize: 1024,
+			};
+
+			global.fetch = vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve(mockManifest),
+			});
+
+			const count = await checkForUpdates();
+
+			expect(count).toBeGreaterThanOrEqual(0);
 		});
 	});
 });

@@ -85,3 +85,10 @@ export const syncContent = async (
 		itemCount: manifest.items.length,
 	});
 };
+
+export const checkForUpdates = async (): Promise<number> => {
+	const manifest = await fetchManifest();
+	const localItems = await getContentItems();
+	const diff = compareManifests(localItems, manifest.items);
+	return diff.toAdd.length + diff.toUpdate.length + diff.toDelete.length;
+};
