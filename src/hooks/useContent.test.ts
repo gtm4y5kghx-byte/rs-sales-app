@@ -31,6 +31,7 @@ describe('useContent', () => {
 			items: [],
 			categories: [],
 			selectedCategoryId: null,
+			isContentLoading: true,
 			syncStatus: 'idle',
 			syncProgress: null,
 			lastSynced: null,
@@ -47,6 +48,19 @@ describe('useContent', () => {
 		await waitFor(() => {
 			expect(useStore.getState().items).toHaveLength(1);
 			expect(useStore.getState().categories).toHaveLength(1);
+		});
+	});
+
+	it('sets isLoading to false after content loads', async () => {
+		vi.mocked(db.getContentItems).mockResolvedValue(mockItems);
+		vi.mocked(db.getCategories).mockResolvedValue(mockCategories);
+
+		expect(useStore.getState().isContentLoading).toBe(true);
+
+		renderHook(() => useContent());
+
+		await waitFor(() => {
+			expect(useStore.getState().isContentLoading).toBe(false);
 		});
 	});
 });

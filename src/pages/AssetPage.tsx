@@ -1,17 +1,24 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useContent } from '@/hooks/useContent';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import PDFViewer from '@/components/PDFViewer';
 import ImageViewer from '@/components/ImageViewer';
 
 const AssetPage = () => {
 	const { id } = useParams<{ id: string }>();
-	const { items } = useContent();
+	const { items, isLoading } = useContent();
 	const navigate = useNavigate();
 
-	console.info('Items:', items);
 	const item = items.find((i) => i.id === Number(id));
+
+	if (isLoading) {
+		return (
+			<div className="flex h-full items-center justify-center">
+				<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+			</div>
+		);
+	}
 
 	if (!item) {
 		return (
