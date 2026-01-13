@@ -50,7 +50,17 @@ export const processDownloadQueue = async (
 		const item = queue[i];
 		const response = await fetch(item.url);
 		const blob = await response.blob();
-		await cacheAsset(item.url, blob);
+		try {
+			await cacheAsset(item.url, blob);
+		} catch (error) {
+			if (
+				error instanceof DOMException &&
+				error.name === 'QuotaExceededError'
+			) {
+				throw new Error('Storage full. Clear some space and try again.');
+			}
+			throw error;
+		}
 
 		onProgress({
 			completed: i + 1,
