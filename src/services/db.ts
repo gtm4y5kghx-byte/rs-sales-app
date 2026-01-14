@@ -23,6 +23,7 @@ const getDB = async () => {
 export const saveContentItems = async (items: ContentItem[]): Promise<void> => {
 	const db = await getDB();
 	const tx = db.transaction('contentItems', 'readwrite');
+	await tx.store.clear();
 	await Promise.all(items.map((item) => tx.store.put(item)));
 	await tx.done;
 };

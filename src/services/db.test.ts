@@ -59,13 +59,23 @@ describe('db service', () => {
 			expect(items).toEqual([]);
 		});
 
-		it('overwrites existing items on save', async () => {
+		it('updates modified items when saving new manifest', async () => {
 			await saveContentItems(mockItems);
 			const updatedItem = { ...mockItems[0], title: 'Updated Title' };
-			await saveContentItems([updatedItem]);
-			const items = (await getContentItems()) as ContentItem[];
+			await saveContentItems([updatedItem, mockItems[1]]);
+			const items = await getContentItems();
+			expect(items).toHaveLength(2);
 			const found = items.find((i) => i.id === 1);
 			expect(found?.title).toBe('Updated Title');
+		});
+
+		it('removes deleted items when saving new manifest', async () => {
+			await saveContentItems(mockItems);
+			// Save only the second item - simulating first item was deleted
+			await saveContentItems([mockItems[1]]);
+			const items = await getContentItems();
+			expect(items).toHaveLength(1);
+			expect(items[0].id).toBe(2);
 		});
 	});
 
@@ -94,6 +104,15 @@ describe('db service', () => {
 		it('returns empty array when no categories exist', async () => {
 			const categories = await getCategories();
 			expect(categories).toEqual([]);
+		});
+
+		it('removes deleted categories when saving new manifest', async () => {
+			await saveCategories(mockCategories);
+			// Save only the second category - simulating first category was deleted
+			await saveCategories([mockCategories[1]]);
+			const categories = await getCategories();
+			expect(categories).toHaveLength(1);
+			expect(categories[0].id).toBe(2);
 		});
 	});
 
