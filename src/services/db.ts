@@ -50,6 +50,7 @@ export const getContentItemsByCategory = async (
 export const saveCategories = async (categories: Category[]): Promise<void> => {
 	const db = await getDB();
 	const tx = db.transaction('categories', 'readwrite');
+	await tx.store.clear();
 	await Promise.all(categories.map((cat) => tx.store.put(cat)));
 	await tx.done;
 };
