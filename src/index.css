@@ -142,4 +142,11 @@
 	.touch-pinch-zoom {
 		touch-action: pinch-zoom;
 	}
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
 }

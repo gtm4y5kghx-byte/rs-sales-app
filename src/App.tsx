@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import Layout from '@/components/Layout';
-import BrowsePage from '@/pages/BrowsePage';
+import HomePage from '@/pages/HomePage';
 import CategoryPage from '@/pages/CategoryPage';
 import AssetPage from '@/pages/AssetPage';
 
@@ -11,7 +11,7 @@ const App = () => {
 			<BrowserRouter>
 				<Routes>
 					<Route element={<Layout />}>
-						<Route path="/" element={<BrowsePage />} />
+						<Route path="/" element={<HomePage />} />
 						<Route path="/category/:id" element={<CategoryPage />} />
 						<Route path="/asset/:id" element={<AssetPage />} />
 					</Route>
