@@ -34,7 +34,7 @@ const HomePage = () => {
 		.sort(
 			(a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime(),
 		)
-		.slice(0, 10);
+		.slice(0, 5);
 
 	return (
 		<div className="space-y-8">
