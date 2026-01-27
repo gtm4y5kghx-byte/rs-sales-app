@@ -1,9 +1,11 @@
+import { Link } from 'react-router-dom';
 import { useContent } from '@/hooks/useContent';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import WelcomeBanner from '@/components/home/WelcomeBanner';
 import ContentCarousel from '@/components/home/ContentCarousel';
 import CategoryGrid from '@/components/home/CategoryGrid';
+import rsLogo from '@/assets/rs_logo.png';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
@@ -30,13 +32,18 @@ const HomePage = () => {
 	// Sort items by modified date for "Recently Added"
 	const recentItems = [...items]
 		.sort(
-			(a, b) =>
-				new Date(b.modified).getTime() - new Date(a.modified).getTime(),
+			(a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime(),
 		)
 		.slice(0, 10);
 
 	return (
 		<div className="space-y-8">
+			<header>
+				<Link to="/">
+					<img src={rsLogo} alt="RS" className="h-16" />
+				</Link>
+			</header>
+
 			<WelcomeBanner />
 
 			{recentItems.length > 0 && (
