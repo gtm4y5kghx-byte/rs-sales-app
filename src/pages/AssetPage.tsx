@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import PDFViewer from '@/components/PDFViewer';
 import ImageViewer from '@/components/ImageViewer';
+import VideoViewer from '@/components/VideoViewer';
 
 const AssetPage = () => {
 	const { id } = useParams<{ id: string }>();
@@ -48,11 +49,7 @@ const AssetPage = () => {
 					<ImageViewer url={item.url} alt={item.title} />
 				)}
 				{item.type === 'video' && (
-					<div className="flex h-full items-center justify-center">
-						<p className="text-muted-foreground">
-							Video viewer not implemented
-						</p>
-					</div>
+					<VideoViewer url={item.url} title={item.title} />
 				)}
 			</div>
 		</div>
