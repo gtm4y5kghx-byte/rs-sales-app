@@ -1,12 +1,9 @@
-import { Link } from 'react-router-dom';
 import { useContent } from '@/hooks/useContent';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import WelcomeBanner from '@/components/home/WelcomeBanner';
 import ContentCarousel from '@/components/home/ContentCarousel';
 import CategoryGrid from '@/components/home/CategoryGrid';
-import SyncStatus from '@/components/SyncStatus';
-import rsLogo from '@/assets/rs_logo.png';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
@@ -39,13 +36,6 @@ const HomePage = () => {
 
 	return (
 		<div className="space-y-8">
-			<header className="flex items-center justify-between">
-				<Link to="/">
-					<img src={rsLogo} alt="RS" className="h-16" />
-				</Link>
-				<SyncStatus />
-			</header>
-
 			<WelcomeBanner />
 
 			{recentItems.length > 0 && (
