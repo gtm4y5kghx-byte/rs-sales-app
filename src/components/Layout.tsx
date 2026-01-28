@@ -1,6 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import SyncStatus from '@/components/SyncStatus';
+import AppMenu from '@/components/AppMenu';
 import rsLogo from '@/assets/rs_logo.png';
 
 const Layout = () => {
@@ -14,7 +14,7 @@ const Layout = () => {
 						<Link to="/">
 							<img src={rsLogo} alt="RS" className="h-16" />
 						</Link>
-						<SyncStatus />
+						<AppMenu />
 					</header>
 					<main>
 						<Outlet />
