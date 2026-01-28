@@ -19,3 +19,28 @@ export function hasRecentlyUpdatedItems(
 			item.categoryId === categoryId && new Date(item.modified) > cutoff,
 	);
 }
+
+/**
+ * Returns items sorted by modified date (newest first), limited to specified count.
+ */
+export function getRecentItems(
+	items: ContentItem[],
+	limit: number = 5,
+): ContentItem[] {
+	return [...items]
+		.sort(
+			(a, b) =>
+				new Date(b.modified).getTime() - new Date(a.modified).getTime(),
+		)
+		.slice(0, limit);
+}
+
+/**
+ * Counts the number of items in a specific category.
+ */
+export function getItemCountByCategory(
+	items: ContentItem[],
+	categoryId: number,
+): number {
+	return items.filter((item) => item.categoryId === categoryId).length;
+}

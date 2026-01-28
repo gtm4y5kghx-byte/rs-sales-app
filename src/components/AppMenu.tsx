@@ -10,12 +10,14 @@ import {
 	SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { formatRelativeTime } from '@/lib/formatters';
 import { Menu, Loader2, RefreshCw, HardDrive } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AppMenu = () => {
 	const isOnline = useOnlineStatus();
-	const { status, progress, lastSynced, sync, checkForUpdates } = useSync();
+	const { status, isSyncing, progress, lastSynced, sync, checkForUpdates } =
+		useSync();
 
 	useEffect(() => {
 		if (isOnline) {
@@ -30,22 +32,6 @@ const AppMenu = () => {
 		} else {
 			toast.error('Sync failed. Check your connection.');
 		}
-	};
-
-	const isSyncing = status === 'downloading';
-
-	const formatRelativeTime = (isoString: string): string => {
-		const date = new Date(isoString);
-		const now = new Date();
-		const diffMs = now.getTime() - date.getTime();
-		const diffMins = Math.floor(diffMs / 60000);
-
-		if (diffMins < 1) return 'just now';
-		if (diffMins < 60) return `${diffMins}m ago`;
-		const diffHours = Math.floor(diffMins / 60);
-		if (diffHours < 24) return `${diffHours}h ago`;
-		const diffDays = Math.floor(diffHours / 24);
-		return `${diffDays}d ago`;
 	};
 
 	return (

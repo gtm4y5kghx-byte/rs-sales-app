@@ -56,8 +56,11 @@ export const useSync = () => {
 		}
 	};
 
+	const isSyncing = status === 'downloading';
+
 	return {
 		status,
+		isSyncing,
 		progress,
 		lastSynced,
 		pendingUpdates,

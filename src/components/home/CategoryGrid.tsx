@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 import type { Category, ContentItem } from '@/types';
-import { hasRecentlyUpdatedItems } from '@/lib/content-utils';
+import {
+	hasRecentlyUpdatedItems,
+	getItemCountByCategory,
+} from '@/lib/content-utils';
 import CategoryIcon from './CategoryIcon';
 
 interface CategoryGridProps {
@@ -10,9 +13,6 @@ interface CategoryGridProps {
 }
 
 const CategoryGrid = ({ categories, items }: CategoryGridProps) => {
-	const getCategoryCount = (catId: number) =>
-		items.filter((i) => i.categoryId === catId).length;
-
 	return (
 		<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
 			{categories.map((cat) => {
@@ -35,7 +35,7 @@ const CategoryGrid = ({ categories, items }: CategoryGridProps) => {
 							{cat.name}
 						</h3>
 						<p className="text-xs text-muted-foreground">
-							{getCategoryCount(cat.id)} items
+							{getItemCountByCategory(items, cat.id)} items
 						</p>
 					</Link>
 				);

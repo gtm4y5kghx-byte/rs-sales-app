@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import WelcomeBanner from '@/components/home/WelcomeBanner';
 import ContentCarousel from '@/components/home/ContentCarousel';
 import CategoryGrid from '@/components/home/CategoryGrid';
+import { getRecentItems } from '@/lib/content-utils';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
@@ -27,12 +28,7 @@ const HomePage = () => {
 		);
 	}
 
-	// Sort items by modified date for "Recently Added"
-	const recentItems = [...items]
-		.sort(
-			(a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime(),
-		)
-		.slice(0, 5);
+	const recentItems = getRecentItems(items, 5);
 
 	return (
 		<div className="space-y-8">
