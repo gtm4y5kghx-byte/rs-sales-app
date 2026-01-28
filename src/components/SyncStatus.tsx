@@ -6,30 +6,9 @@ import { cn } from '@/lib/utils';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
-const formatRelativeTime = (isoString: string): string => {
-	const date = new Date(isoString);
-	const now = new Date();
-	const diffMs = now.getTime() - date.getTime();
-	const diffMins = Math.floor(diffMs / 60000);
-
-	if (diffMins < 1) return 'just now';
-	if (diffMins < 60) return `${diffMins}m ago`;
-	const diffHours = Math.floor(diffMins / 60);
-	if (diffHours < 24) return `${diffHours}h ago`;
-	const diffDays = Math.floor(diffHours / 24);
-	return `${diffDays}d ago`;
-};
-
 const SyncStatus = () => {
 	const isOnline = useOnlineStatus();
-	const {
-		status,
-		progress,
-		lastSynced,
-		pendingUpdates,
-		sync,
-		checkForUpdates,
-	} = useSync();
+	const { status, progress, sync, checkForUpdates } = useSync();
 
 	useEffect(() => {
 		if (isOnline) {
@@ -46,9 +25,12 @@ const SyncStatus = () => {
 		}
 	};
 
+	const isSyncing = status === 'downloading';
+
 	return (
-		<div className="border-t p-4 space-y-3">
-			<div className="flex items-center gap-2 text-sm">
+		<div className="flex items-center gap-3">
+			{/* Online/Offline indicator */}
+			<div className="flex items-center gap-1.5 text-sm">
 				<span
 					className={cn(
 						'h-2 w-2 rounded-full',
@@ -60,40 +42,19 @@ const SyncStatus = () => {
 				</span>
 			</div>
 
-			{lastSynced && (
-				<p className="text-xs text-muted-foreground">
-					Last synced: {formatRelativeTime(lastSynced)}
-				</p>
-			)}
-
-			{pendingUpdates > 0 && (
-				<p className="text-xs font-medium">
-					{pendingUpdates} update{pendingUpdates !== 1 ? 's' : ''} available
-				</p>
-			)}
-
+			{/* Sync button (icon only) */}
 			<Button
 				onClick={handleSync}
-				disabled={status === 'downloading' || !isOnline}
-				variant={status === 'error' ? 'destructive' : 'default'}
-				className="w-full"
-				size="sm"
+				disabled={isSyncing || !isOnline}
+				variant={status === 'error' ? 'destructive' : 'ghost'}
+				size="icon"
+				className="h-8 w-8"
+				title={isSyncing ? `Syncing ${progress?.completed}/${progress?.total}` : 'Sync now'}
 			>
-				{status === 'downloading' ? (
-					<>
-						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-						Syncing {progress?.completed}/{progress?.total}...
-					</>
-				) : status === 'error' ? (
-					<>
-						<RefreshCw className="mr-2 h-4 w-4" />
-						Retry Sync
-					</>
+				{isSyncing ? (
+					<Loader2 className="h-4 w-4 animate-spin" />
 				) : (
-					<>
-						<RefreshCw className="mr-2 h-4 w-4" />
-						Sync Now
-					</>
+					<RefreshCw className="h-4 w-4" />
 				)}
 			</Button>
 		</div>
