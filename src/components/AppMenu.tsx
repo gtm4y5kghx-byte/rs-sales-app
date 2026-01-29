@@ -17,8 +17,15 @@ import { toast } from 'sonner';
 
 const AppMenu = () => {
 	const isOnline = useOnlineStatus();
-	const { status, isSyncing, progress, lastSynced, sync, checkForUpdates } =
-		useSync();
+	const {
+		status,
+		isSyncing,
+		progress,
+		lastSynced,
+		pendingUpdates,
+		sync,
+		checkForUpdates,
+	} = useSync();
 	const { usage, quota, isClearing, clearCache, refresh: refreshStorage } = useStorage();
 
 	useEffect(() => {
@@ -72,6 +79,12 @@ const AppMenu = () => {
 						{lastSynced && (
 							<p className="text-sm text-muted-foreground">
 								Last synced: {formatRelativeTime(lastSynced)}
+							</p>
+						)}
+
+						{pendingUpdates > 0 && (
+							<p className="text-sm font-medium text-blue-600">
+								{pendingUpdates} update{pendingUpdates !== 1 ? 's' : ''} available
 							</p>
 						)}
 
