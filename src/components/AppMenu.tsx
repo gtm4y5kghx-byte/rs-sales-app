@@ -10,39 +10,22 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from '@/components/ui/sheet';
+import SyncButton from '@/components/SyncButton';
 import { cn } from '@/lib/utils';
 import { formatRelativeTime, formatFileSize } from '@/lib/formatters';
-import { Menu, Loader2, RefreshCw, Trash2 } from 'lucide-react';
+import { Menu, Loader2, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AppMenu = () => {
 	const isOnline = useOnlineStatus();
-	const {
-		status,
-		isSyncing,
-		progress,
-		lastSynced,
-		pendingUpdates,
-		sync,
-		checkForUpdates,
-	} = useSync();
-	const { usage, quota, isClearing, clearCache, refresh: refreshStorage } = useStorage();
+	const { lastSynced, pendingUpdates, checkForUpdates } = useSync();
+	const { usage, quota, isClearing, clearCache } = useStorage();
 
 	useEffect(() => {
 		if (isOnline) {
 			checkForUpdates();
 		}
 	}, [isOnline, checkForUpdates]);
-
-	const handleSync = async () => {
-		const success = await sync();
-		if (success) {
-			toast.success('Content synced successfully');
-			refreshStorage();
-		} else {
-			toast.error('Sync failed. Check your connection.');
-		}
-	};
 
 	const handleClearCache = async () => {
 		await clearCache();
@@ -88,29 +71,7 @@ const AppMenu = () => {
 							</p>
 						)}
 
-						<Button
-							onClick={handleSync}
-							disabled={isSyncing || !isOnline}
-							variant={status === 'error' ? 'destructive' : 'default'}
-							className="w-full"
-						>
-							{isSyncing ? (
-								<>
-									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-									Syncing {progress?.completed}/{progress?.total}...
-								</>
-							) : status === 'error' ? (
-								<>
-									<RefreshCw className="mr-2 h-4 w-4" />
-									Retry Sync
-								</>
-							) : (
-								<>
-									<RefreshCw className="mr-2 h-4 w-4" />
-									Sync Now
-								</>
-							)}
-						</Button>
+						<SyncButton />
 					</section>
 
 					<hr />

@@ -12,7 +12,7 @@ const ContentCarousel = ({ items }: ContentCarouselProps) => {
 
 	const scroll = (direction: 'left' | 'right') => {
 		if (scrollRef.current) {
-			const cardWidth = 200;
+			const cardWidth = 224;
 			scrollRef.current.scrollBy({
 				left: direction === 'left' ? -cardWidth * 2 : cardWidth * 2,
 				behavior: 'smooth',
@@ -37,7 +37,7 @@ const ContentCarousel = ({ items }: ContentCarouselProps) => {
 				className="scrollbar-hide flex gap-4 overflow-x-auto scroll-smooth pb-2"
 			>
 				{items.map((item) => (
-					<div key={item.id} className="w-48 flex-shrink-0">
+					<div key={item.id} className="w-56 flex-shrink-0">
 						<ContentCard item={item} compact />
 					</div>
 				))}

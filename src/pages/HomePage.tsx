@@ -1,6 +1,6 @@
 import { useContent } from '@/hooks/useContent';
-import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import SyncButton from '@/components/SyncButton';
 import WelcomeBanner from '@/components/home/WelcomeBanner';
 import ContentCarousel from '@/components/home/ContentCarousel';
 import CategoryGrid from '@/components/home/CategoryGrid';
@@ -22,7 +22,7 @@ const HomePage = () => {
 			<div className="flex h-full items-center justify-center">
 				<div className="text-center">
 					<p className="mb-4 text-muted-foreground">No content synced yet.</p>
-					<Button>Sync Now</Button>
+					<SyncButton className="w-auto" />
 				</div>
 			</div>
 		);
