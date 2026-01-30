@@ -17,7 +17,7 @@ interface ContentCardProps {
 const ContentCard = ({ item, compact = false }: ContentCardProps) => {
 	return (
 		<Link to={`/asset/${item.id}`}>
-			<Card className="overflow-hidden transition-shadow hover:shadow-md">
+			<Card className="flex h-full flex-col overflow-hidden transition-shadow hover:shadow-md">
 				<img
 					src={item.thumbnail ?? 'https://placehold.co/400x300?text=No+Preview'}
 					alt={item.title}
@@ -26,7 +26,7 @@ const ContentCard = ({ item, compact = false }: ContentCardProps) => {
 						compact ? 'aspect-square' : 'aspect-4/3',
 					)}
 				/>
-				<CardContent className={cn('p-3', compact && 'p-2')}>
+				<CardContent className={cn('flex flex-1 flex-col p-3', compact && 'p-2')}>
 					{compact ? (
 						<p className="line-clamp-1 text-xs font-medium">{item.title}</p>
 					) : (

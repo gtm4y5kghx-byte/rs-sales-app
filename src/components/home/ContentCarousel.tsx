@@ -34,10 +34,10 @@ const ContentCarousel = ({ items }: ContentCarouselProps) => {
 			{/* Scrollable Container */}
 			<div
 				ref={scrollRef}
-				className="scrollbar-hide flex gap-4 overflow-x-auto scroll-smooth pb-2"
+				className="scrollbar-hide flex items-stretch gap-4 overflow-x-auto scroll-smooth pb-2"
 			>
 				{items.map((item) => (
-					<div key={item.id} className="w-56 flex-shrink-0">
+					<div key={item.id} className="h-full w-56 shrink-0">
 						<ContentCard item={item} compact />
 					</div>
 				))}
