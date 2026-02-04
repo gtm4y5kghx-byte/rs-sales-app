@@ -1,20 +1,21 @@
 import { openDB } from 'idb';
-import type { Category, ContentItem, SyncState } from '@/types';
+import type { AppContent, Category, ContentItem, SyncState } from '@/types';
 
 const DB_NAME = 'rs-sales-app';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 const getDB = async () => {
 	return openDB(DB_NAME, DB_VERSION, {
-		upgrade(db) {
-			if (!db.objectStoreNames.contains('contentItems')) {
+		upgrade(db, oldVersion) {
+			// v1: contentItems, categories, syncState
+			if (oldVersion < 1) {
 				db.createObjectStore('contentItems', { keyPath: 'id' });
-			}
-			if (!db.objectStoreNames.contains('categories')) {
 				db.createObjectStore('categories', { keyPath: 'id' });
-			}
-			if (!db.objectStoreNames.contains('syncState')) {
 				db.createObjectStore('syncState');
+			}
+			// v2: appContent
+			if (oldVersion < 2) {
+				db.createObjectStore('appContent');
 			}
 		},
 	});
@@ -38,6 +39,7 @@ export const clearDatabase = async (): Promise<void> => {
 	await db.clear('contentItems');
 	await db.clear('categories');
 	await db.clear('syncState');
+	await db.clear('appContent');
 };
 
 export const getContentItemsByCategory = async (
@@ -76,4 +78,15 @@ export const getSyncState = async (): Promise<SyncState> => {
 export const setSyncState = async (state: SyncState): Promise<void> => {
 	const db = await getDB();
 	await db.put('syncState', state, 'current');
+};
+
+export const getAppContent = async (): Promise<AppContent | null> => {
+	const db = await getDB();
+	const content = await db.get('appContent', 'current');
+	return content ?? null;
+};
+
+export const saveAppContent = async (content: AppContent): Promise<void> => {
+	const db = await getDB();
+	await db.put('appContent', content, 'current');
 };

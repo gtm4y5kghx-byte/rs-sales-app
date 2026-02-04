@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { ContentItem, Category, SyncState } from '@/types';
+import type { ContentItem, Category, SyncState, AppContent } from '@/types';
 
 import {
 	saveContentItems,
@@ -9,6 +9,8 @@ import {
 	getCategories,
 	getSyncState,
 	setSyncState,
+	saveAppContent,
+	getAppContent,
 	clearDatabase,
 } from './db';
 
@@ -135,6 +137,74 @@ describe('db service', () => {
 			await setSyncState(newState);
 			const state = await getSyncState();
 			expect(state).toEqual(newState);
+		});
+	});
+
+	describe('saveAppContent / getAppContent', () => {
+		const mockAppContent: AppContent = {
+			version: '2024-01-15T10:30:00Z',
+			homepage: {
+				hero: {
+					title: 'Main Sales Deck',
+					description: 'Your complete resource',
+					image: {
+						url: 'https://example.com/hero.jpg',
+						thumbnail: 'https://example.com/hero-thumb.jpg',
+						alt: 'Hero image',
+					},
+					linkText: 'View Resource',
+					linkSlug: 'main-sales-deck',
+				},
+				faqs: [{ question: 'What is this?', answer: 'A sales app.' }],
+				footerTagline: 'Built for your team',
+			},
+			pages: [
+				{
+					slug: 'main-sales-deck',
+					title: 'Main Sales Deck',
+					hero: {
+						title: 'Sales Deck',
+						description: 'Complete overview',
+						image: null,
+					},
+					applications: [],
+					video: { url: '', title: '', description: '' },
+					features: [],
+					caseStudies: [],
+				},
+			],
+		};
+
+		it('returns null when no app content exists', async () => {
+			const content = await getAppContent();
+			expect(content).toBeNull();
+		});
+
+		it('saves and retrieves app content', async () => {
+			await saveAppContent(mockAppContent);
+			const content = await getAppContent();
+			expect(content).toEqual(mockAppContent);
+		});
+
+		it('overwrites existing app content on save', async () => {
+			await saveAppContent(mockAppContent);
+
+			const updatedContent: AppContent = {
+				...mockAppContent,
+				version: '2024-01-16T10:30:00Z',
+				homepage: {
+					...mockAppContent.homepage,
+					hero: {
+						...mockAppContent.homepage.hero,
+						title: 'Updated Title',
+					},
+				},
+			};
+			await saveAppContent(updatedContent);
+
+			const content = await getAppContent();
+			expect(content?.version).toBe('2024-01-16T10:30:00Z');
+			expect(content?.homepage.hero.title).toBe('Updated Title');
 		});
 	});
 });

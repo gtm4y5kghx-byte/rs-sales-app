@@ -7,7 +7,7 @@ import {
 	clearDatabase,
 } from '@/services/db';
 import { getCachedAsset, clearCache } from '@/services/cache';
-import type { ContentManifest } from '@/types';
+import type { ContentManifest, AppContent } from '@/types';
 
 const mockManifest: ContentManifest = {
 	version: 'v1.0.0',
@@ -42,6 +42,22 @@ const mockManifest: ContentManifest = {
 	totalSize: 3072,
 };
 
+const mockAppContent: AppContent = {
+	version: 'v1.0.0',
+	homepage: {
+		hero: {
+			title: 'Test Hero',
+			description: '',
+			image: null,
+			linkText: '',
+			linkSlug: null,
+		},
+		faqs: [],
+		footerTagline: '',
+	},
+	pages: [],
+};
+
 const mockPdfBlob = new Blob(['%PDF-1.4 mock content'], {
 	type: 'application/pdf',
 });
@@ -60,6 +76,12 @@ describe('sync integration', () => {
 				return Promise.resolve({
 					ok: true,
 					json: () => Promise.resolve(mockManifest),
+				});
+			}
+			if (url.includes('app-content')) {
+				return Promise.resolve({
+					ok: true,
+					json: () => Promise.resolve(mockAppContent),
 				});
 			}
 			return Promise.resolve({
@@ -97,6 +119,12 @@ describe('sync integration', () => {
 					json: () => Promise.resolve(mockManifest),
 				});
 			}
+			if (url.includes('app-content')) {
+				return Promise.resolve({
+					ok: true,
+					json: () => Promise.resolve(mockAppContent),
+				});
+			}
 			return Promise.resolve({
 				ok: true,
 				blob: () => Promise.resolve(mockPdfBlob),
@@ -122,6 +150,12 @@ describe('sync integration', () => {
 				return Promise.resolve({
 					ok: true,
 					json: () => Promise.resolve(mockManifest),
+				});
+			}
+			if (url.includes('app-content')) {
+				return Promise.resolve({
+					ok: true,
+					json: () => Promise.resolve(mockAppContent),
 				});
 			}
 			return Promise.resolve({
@@ -153,6 +187,12 @@ describe('sync integration', () => {
 					json: () => Promise.resolve(updatedManifest),
 				});
 			}
+			if (url.includes('app-content')) {
+				return Promise.resolve({
+					ok: true,
+					json: () => Promise.resolve(mockAppContent),
+				});
+			}
 			return Promise.resolve({
 				ok: true,
 				blob: () => Promise.resolve(mockPdfBlob),
@@ -161,7 +201,7 @@ describe('sync integration', () => {
 
 		await syncContent(vi.fn());
 
-		// Should have fetched manifest + only the changed item (2 calls total)
-		expect(fetch).toHaveBeenCalledTimes(2);
+		// Should have fetched manifest + app-content + only the changed item (3 calls total)
+		expect(fetch).toHaveBeenCalledTimes(3);
 	});
 });

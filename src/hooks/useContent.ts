@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useStore } from '@/store/store';
-import { getContentItems, getCategories } from '@/services/db';
+import { getContentItems, getCategories, getAppContent } from '@/services/db';
 
 export const useContent = () => {
 	const items = useStore((state) => state.items);
@@ -14,20 +14,25 @@ export const useContent = () => {
 	);
 	const setContentLoading = useStore((state) => state.setContentLoading);
 	const getFilteredItems = useStore((state) => state.getFilteredItems);
+	const setAppContent = useStore((state) => state.setAppContent);
+	const setAppContentLoading = useStore((state) => state.setAppContentLoading);
 
 	useEffect(() => {
 		const loadContent = async () => {
-			const [items, categories] = await Promise.all([
+			const [items, categories, appContent] = await Promise.all([
 				getContentItems(),
 				getCategories(),
+				getAppContent(),
 			]);
 			setItems(items);
 			setCategories(categories);
+			setAppContent(appContent);
 			setContentLoading(false);
+			setAppContentLoading(false);
 		};
 
 		loadContent();
-	}, [setItems, setCategories, setContentLoading]);
+	}, [setItems, setCategories, setContentLoading, setAppContent, setAppContentLoading]);
 
 	return {
 		items,

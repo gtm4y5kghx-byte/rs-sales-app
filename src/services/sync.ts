@@ -1,11 +1,12 @@
-import type { ContentItem, SyncProgress } from '@/types';
-import { fetchManifest } from './api';
+import type { AppContent, ContentItem, SyncProgress } from '@/types';
+import { fetchManifest, fetchAppContent } from './api';
 import { cacheAsset, deleteAsset } from './cache';
 import {
 	getContentItems,
 	saveContentItems,
 	saveCategories,
 	setSyncState,
+	saveAppContent,
 } from './db';
 
 export interface ManifestDiff {
@@ -76,7 +77,12 @@ export const processDownloadQueue = async (
 export const syncContent = async (
 	onProgress: (progress: SyncProgress) => void,
 ): Promise<void> => {
-	const manifest = await fetchManifest();
+	// Fetch manifest and app content in parallel
+	const [manifest, appContent] = await Promise.all([
+		fetchManifest(),
+		fetchAppContent(),
+	]);
+
 	const localItems = await getContentItems();
 
 	const diff = compareManifests(localItems, manifest.items);
@@ -90,8 +96,21 @@ export const syncContent = async (
 		await deleteAsset(item.url);
 	}
 
+	// Cache app content images
+	const appContentImageUrls = collectAppContentImageUrls(appContent);
+	for (const url of appContentImageUrls) {
+		try {
+			const response = await fetch(url);
+			const blob = await response.blob();
+			await cacheAsset(url, blob);
+		} catch {
+			// Non-fatal — app content images are not critical for offline use
+		}
+	}
+
 	await saveContentItems(manifest.items);
 	await saveCategories(manifest.categories);
+	await saveAppContent(appContent);
 	await setSyncState({
 		lastSynced: new Date().toISOString(),
 		manifestVersion: manifest.version,
@@ -104,4 +123,45 @@ export const checkForUpdates = async (): Promise<number> => {
 	const localItems = await getContentItems();
 	const diff = compareManifests(localItems, manifest.items);
 	return diff.toAdd.length + diff.toUpdate.length + diff.toDelete.length;
+};
+
+export const collectAppContentImageUrls = (content: AppContent): string[] => {
+	const urls: string[] = [];
+
+	// Homepage hero
+	if (content.homepage?.hero?.image) {
+		urls.push(content.homepage.hero.image.url);
+		urls.push(content.homepage.hero.image.thumbnail);
+	}
+
+	// Pages
+	for (const page of content.pages ?? []) {
+		if (page.hero.image) {
+			urls.push(page.hero.image.url);
+			urls.push(page.hero.image.thumbnail);
+		}
+
+		for (const app of page.applications) {
+			if (app.image) {
+				urls.push(app.image.url);
+				urls.push(app.image.thumbnail);
+			}
+		}
+
+		for (const feature of page.features) {
+			if (feature.image) {
+				urls.push(feature.image.url);
+				urls.push(feature.image.thumbnail);
+			}
+		}
+
+		for (const study of page.caseStudies) {
+			if (study.thumbnail) {
+				urls.push(study.thumbnail);
+			}
+		}
+	}
+
+	// Deduplicate
+	return [...new Set(urls)];
 };

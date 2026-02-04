@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from './store';
-import type { ContentItem, Category } from '@/types';
+import type { ContentItem, Category, AppContent } from '@/types';
 
 const mockItems: ContentItem[] = [
 	{
@@ -41,6 +41,8 @@ describe('store', () => {
 			syncStatus: 'idle',
 			syncProgress: null,
 			lastSynced: null,
+			appContent: null,
+			isAppContentLoading: true,
 		});
 	});
 
@@ -87,6 +89,42 @@ describe('store', () => {
 			const timestamp = '2024-01-15T10:30:00Z';
 			useStore.getState().setLastSynced(timestamp);
 			expect(useStore.getState().lastSynced).toBe(timestamp);
+		});
+	});
+
+	describe('app content slice', () => {
+		const mockAppContent: AppContent = {
+			version: '2024-01-15T10:30:00Z',
+			homepage: {
+				hero: {
+					title: 'Main Sales Deck',
+					description: 'Your complete resource',
+					image: null,
+					linkText: 'View Resource',
+					linkSlug: 'main-sales-deck',
+				},
+				faqs: [],
+				footerTagline: '',
+			},
+			pages: [],
+		};
+
+		it('defaults appContent to null', () => {
+			expect(useStore.getState().appContent).toBeNull();
+		});
+
+		it('defaults isAppContentLoading to true', () => {
+			expect(useStore.getState().isAppContentLoading).toBe(true);
+		});
+
+		it('sets app content', () => {
+			useStore.getState().setAppContent(mockAppContent);
+			expect(useStore.getState().appContent).toEqual(mockAppContent);
+		});
+
+		it('sets app content loading state', () => {
+			useStore.getState().setAppContentLoading(false);
+			expect(useStore.getState().isAppContentLoading).toBe(false);
 		});
 	});
 });

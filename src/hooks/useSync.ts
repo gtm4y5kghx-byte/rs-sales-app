@@ -3,7 +3,7 @@ import {
 	syncContent,
 	checkForUpdates as checkForUpdatesService,
 } from '@/services/sync';
-import { getContentItems, getCategories } from '@/services/db';
+import { getContentItems, getCategories, getAppContent } from '@/services/db';
 
 export const useSync = () => {
 	const status = useStore((state) => state.syncStatus);
@@ -16,6 +16,7 @@ export const useSync = () => {
 	const setPendingUpdates = useStore((state) => state.setPendingUpdates);
 	const setItems = useStore((state) => state.setItems);
 	const setCategories = useStore((state) => state.setCategories);
+	const setAppContent = useStore((state) => state.setAppContent);
 
 	const sync = async () => {
 		setSyncStatus('downloading');
@@ -26,12 +27,14 @@ export const useSync = () => {
 			});
 
 			// Reload content from IndexedDB into store
-			const [items, categories] = await Promise.all([
+			const [items, categories, appContent] = await Promise.all([
 				getContentItems(),
 				getCategories(),
+				getAppContent(),
 			]);
 			setItems(items);
 			setCategories(categories);
+			setAppContent(appContent);
 
 			setLastSynced(new Date().toISOString());
 			setSyncStatus('idle');

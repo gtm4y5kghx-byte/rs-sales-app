@@ -1,5 +1,11 @@
 import { create } from 'zustand';
-import type { ContentItem, Category, SyncStatus, SyncProgress } from '@/types';
+import type {
+	ContentItem,
+	Category,
+	SyncStatus,
+	SyncProgress,
+	AppContent,
+} from '@/types';
 
 interface StoreState {
 	items: ContentItem[];
@@ -20,6 +26,11 @@ interface StoreState {
 	setSyncProgress: (progress: SyncProgress | null) => void;
 	setLastSynced: (timestamp: string | null) => void;
 	setPendingUpdates: (count: number) => void;
+
+	appContent: AppContent | null;
+	isAppContentLoading: boolean;
+	setAppContent: (content: AppContent | null) => void;
+	setAppContentLoading: (loading: boolean) => void;
 }
 
 export const useStore = create<StoreState>((set, get) => ({
@@ -45,4 +56,9 @@ export const useStore = create<StoreState>((set, get) => ({
 	setSyncProgress: (progress) => set({ syncProgress: progress }),
 	setLastSynced: (timestamp) => set({ lastSynced: timestamp }),
 	setPendingUpdates: (count) => set({ pendingUpdates: count }),
+
+	appContent: null,
+	isAppContentLoading: true,
+	setAppContent: (content) => set({ appContent: content }),
+	setAppContentLoading: (loading) => set({ isAppContentLoading: loading }),
 }));

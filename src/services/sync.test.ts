@@ -5,9 +5,10 @@ import {
 	processDownloadQueue,
 	syncContent,
 	checkForUpdates,
+	collectAppContentImageUrls,
 	type ManifestDiff,
 } from './sync';
-import type { ContentItem, ContentManifest } from '@/types';
+import type { ContentItem, ContentManifest, AppContent } from '@/types';
 
 const baseItem: ContentItem = {
 	id: 1,
@@ -115,10 +116,39 @@ describe('sync service', () => {
 				totalSize: 1024,
 			};
 
-			global.fetch = vi.fn().mockResolvedValue({
-				ok: true,
-				json: () => Promise.resolve(mockManifest),
-				blob: () => Promise.resolve(new Blob(['test'])),
+			const mockAppContent: AppContent = {
+				version: 'v1.0.0',
+				homepage: {
+					hero: {
+						title: 'Test',
+						description: '',
+						image: null,
+						linkText: '',
+						linkSlug: null,
+					},
+					faqs: [],
+					footerTagline: '',
+				},
+				pages: [],
+			};
+
+			global.fetch = vi.fn().mockImplementation((url: string) => {
+				if (url.includes('app-content')) {
+					return Promise.resolve({
+						ok: true,
+						json: () => Promise.resolve(mockAppContent),
+					});
+				}
+				if (url.includes('content-manifest')) {
+					return Promise.resolve({
+						ok: true,
+						json: () => Promise.resolve(mockManifest),
+					});
+				}
+				return Promise.resolve({
+					ok: true,
+					blob: () => Promise.resolve(new Blob(['test'])),
+				});
 			});
 
 			const onProgress = vi.fn();
@@ -187,6 +217,178 @@ describe('sync service', () => {
 			const count = await checkForUpdates();
 
 			expect(count).toBeGreaterThanOrEqual(1);
+		});
+	});
+
+	describe('collectAppContentImageUrls', () => {
+		const baseAppContent: AppContent = {
+			version: '2024-01-15T10:30:00Z',
+			homepage: {
+				hero: {
+					title: 'Main Sales Deck',
+					description: 'Description',
+					image: {
+						url: 'https://example.com/hero.jpg',
+						thumbnail: 'https://example.com/hero-thumb.jpg',
+						alt: 'Hero',
+					},
+					linkText: 'View',
+					linkSlug: 'main',
+				},
+				faqs: [],
+				footerTagline: '',
+			},
+			pages: [],
+		};
+
+		it('extracts hero image URLs', () => {
+			const urls = collectAppContentImageUrls(baseAppContent);
+
+			expect(urls).toContain('https://example.com/hero.jpg');
+			expect(urls).toContain('https://example.com/hero-thumb.jpg');
+		});
+
+		it('extracts page hero and section image URLs', () => {
+			const content: AppContent = {
+				...baseAppContent,
+				pages: [
+					{
+						slug: 'test',
+						title: 'Test Page',
+						hero: {
+							title: 'Page Hero',
+							description: 'Desc',
+							image: {
+								url: 'https://example.com/page-hero.jpg',
+								thumbnail: 'https://example.com/page-hero-thumb.jpg',
+								alt: 'Page Hero',
+							},
+						},
+						applications: [
+							{
+								title: 'App 1',
+								description: 'Desc',
+								image: {
+									url: 'https://example.com/app1.jpg',
+									thumbnail: 'https://example.com/app1-thumb.jpg',
+									alt: 'App 1',
+								},
+							},
+						],
+						video: { url: '', title: '', description: '' },
+						features: [
+							{
+								title: 'Feature 1',
+								description: 'Desc',
+								image: {
+									url: 'https://example.com/feature1.jpg',
+									thumbnail: 'https://example.com/feature1-thumb.jpg',
+									alt: 'Feature 1',
+								},
+								specs: {
+									poleLength: '',
+									poleStrength: '',
+									voltageLevel: '',
+									applications: '',
+								},
+							},
+						],
+						caseStudies: [
+							{
+								assetId: 1,
+								title: 'Case Study',
+								summary: 'Summary',
+								thumbnail: 'https://example.com/case-thumb.jpg',
+							},
+						],
+					},
+				],
+			};
+
+			const urls = collectAppContentImageUrls(content);
+
+			expect(urls).toContain('https://example.com/page-hero.jpg');
+			expect(urls).toContain('https://example.com/app1.jpg');
+			expect(urls).toContain('https://example.com/feature1.jpg');
+			expect(urls).toContain('https://example.com/case-thumb.jpg');
+		});
+
+		it('deduplicates URLs', () => {
+			const content: AppContent = {
+				...baseAppContent,
+				pages: [
+					{
+						slug: 'test',
+						title: 'Test',
+						hero: {
+							title: 'Hero',
+							description: '',
+							image: {
+								url: 'https://example.com/hero.jpg', // Same as homepage hero
+								thumbnail: 'https://example.com/hero-thumb.jpg',
+								alt: 'Hero',
+							},
+						},
+						applications: [],
+						video: { url: '', title: '', description: '' },
+						features: [],
+						caseStudies: [],
+					},
+				],
+			};
+
+			const urls = collectAppContentImageUrls(content);
+			const heroCount = urls.filter(
+				(u: string) => u === 'https://example.com/hero.jpg',
+			).length;
+
+			expect(heroCount).toBe(1);
+		});
+
+		it('handles null images gracefully', () => {
+			const content: AppContent = {
+				version: '2024-01-15T10:30:00Z',
+				homepage: {
+					hero: {
+						title: 'No Image Hero',
+						description: '',
+						image: null,
+						linkText: '',
+						linkSlug: null,
+					},
+					faqs: [],
+					footerTagline: '',
+				},
+				pages: [
+					{
+						slug: 'test',
+						title: 'Test',
+						hero: { title: '', description: '', image: null },
+						applications: [{ title: '', description: '', image: null }],
+						video: { url: '', title: '', description: '' },
+						features: [
+							{
+								title: '',
+								description: '',
+								image: null,
+								specs: {
+									poleLength: '',
+									poleStrength: '',
+									voltageLevel: '',
+									applications: '',
+								},
+							},
+						],
+						caseStudies: [
+							{ assetId: 1, title: '', summary: '', thumbnail: null },
+						],
+					},
+				],
+			};
+
+			const urls = collectAppContentImageUrls(content);
+
+			expect(urls).toEqual([]);
 		});
 	});
 });

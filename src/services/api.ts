@@ -1,10 +1,13 @@
-import type { ContentManifest } from '@/types';
+import type { ContentManifest, AppContent } from '@/types';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-export const fetchManifest = async (): Promise<ContentManifest> => {
-	const response = await fetch(API_URL, {
+// Derive base URL by stripping the endpoint path
+const API_BASE = API_URL.replace(/\/content-manifest$/, '');
+
+const fetchWithAuth = async (url: string): Promise<Response> => {
+	const response = await fetch(url, {
 		headers: {
 			'X-RS-API-Key': API_KEY,
 		},
@@ -14,5 +17,15 @@ export const fetchManifest = async (): Promise<ContentManifest> => {
 		throw new Error(`${response.status}: ${response.statusText}`);
 	}
 
+	return response;
+};
+
+export const fetchManifest = async (): Promise<ContentManifest> => {
+	const response = await fetchWithAuth(API_URL);
+	return response.json();
+};
+
+export const fetchAppContent = async (): Promise<AppContent> => {
+	const response = await fetchWithAuth(`${API_BASE}/app-content`);
 	return response.json();
 };
