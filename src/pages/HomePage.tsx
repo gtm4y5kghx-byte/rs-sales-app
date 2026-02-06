@@ -3,9 +3,8 @@ import { useAppContent } from '@/hooks/useAppContent';
 import { Loader2 } from 'lucide-react';
 import SyncButton from '@/components/SyncButton';
 import HeroSection from '@/components/home/HeroSection';
+import CategoryCarouselSection from '@/components/home/CategoryCarouselSection';
 import ContentCarousel from '@/components/home/ContentCarousel';
-import CategoryGrid from '@/components/home/CategoryGrid';
-import { getRecentItems } from '@/lib/content-utils';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
@@ -30,23 +29,34 @@ const HomePage = () => {
 		);
 	}
 
-	const recentItems = getRecentItems(items, 5);
+	const videoItems = items.filter((item) => item.type === 'video');
 
 	return (
 		<div className="space-y-8">
 			{homepage?.hero && <HeroSection hero={homepage.hero} />}
 
-			{recentItems.length > 0 && (
-				<section>
-					<h2 className="mb-4 text-lg font-semibold">Recently Added</h2>
-					<ContentCarousel items={recentItems} />
-				</section>
-			)}
+			{categories.map((category) => {
+				const categoryItems = items.filter(
+					(item) => item.categoryId === category.id
+				);
+				return (
+					<CategoryCarouselSection
+						key={category.id}
+						category={category}
+						items={categoryItems}
+					/>
+				);
+			})}
 
-			{categories.length > 0 && (
-				<section>
-					<h2 className="mb-4 text-lg font-semibold">Browse by Category</h2>
-					<CategoryGrid categories={categories} items={items} />
+			{videoItems.length > 0 && (
+				<section id="video-resources">
+					<div className="mb-4 flex items-center justify-between">
+						<h2 className="text-lg font-bold uppercase tracking-wide">
+							Video Resources
+						</h2>
+						<span className="text-sm text-muted-foreground">View All</span>
+					</div>
+					<ContentCarousel items={videoItems} />
 				</section>
 			)}
 		</div>
