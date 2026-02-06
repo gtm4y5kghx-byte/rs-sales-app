@@ -3,35 +3,9 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useAppContent } from './useAppContent';
 import { useStore } from '@/store/store';
 import * as db from '@/services/db';
-import type { AppContent } from '@/types';
+import { mockAppContent } from '@/test/fixtures';
 
 vi.mock('@/services/db');
-
-const mockAppContent: AppContent = {
-	version: '2024-01-15T10:30:00Z',
-	homepage: {
-		hero: {
-			title: 'Main Sales Deck',
-			description: 'Your complete resource',
-			image: null,
-			linkText: 'View Resource',
-			linkSlug: 'main-sales-deck',
-		},
-		faqs: [{ question: 'What is this?', answer: 'A sales app.' }],
-		footerTagline: 'Built for your team',
-	},
-	pages: [
-		{
-			slug: 'main-sales-deck',
-			title: 'Main Sales Deck',
-			hero: { title: 'Sales Deck', description: 'Overview', image: null },
-			applications: [],
-			video: { url: '', title: '', description: '' },
-			features: [],
-			caseStudies: [],
-		},
-	],
-};
 
 describe('useAppContent', () => {
 	beforeEach(() => {

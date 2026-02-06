@@ -1,36 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useStore } from './store';
-import type { ContentItem, Category, AppContent } from '@/types';
-
-const mockItems: ContentItem[] = [
-	{
-		id: 1,
-		title: 'Product Sheet',
-		categoryId: 1,
-		type: 'pdf',
-		url: 'https://example.com/doc.pdf',
-		thumbnail: 'https://example.com/thumb.jpg',
-		fileSize: 1024,
-		checksum: 'abc123',
-		modified: '2024-01-01T00:00:00Z',
-	},
-	{
-		id: 2,
-		title: 'User Guide',
-		categoryId: 2,
-		type: 'pdf',
-		url: 'https://example.com/guide.pdf',
-		thumbnail: 'https://example.com/thumb2.jpg',
-		fileSize: 2048,
-		checksum: 'def456',
-		modified: '2024-01-02T00:00:00Z',
-	},
-];
-
-const mockCategories: Category[] = [
-	{ id: 1, name: 'Products', slug: 'products' },
-	{ id: 2, name: 'Guides', slug: 'guides' },
-];
+import {
+	mockContentItems,
+	mockCategories,
+	mockEmptyAppContent,
+} from '@/test/fixtures';
 
 describe('store', () => {
 	beforeEach(() => {
@@ -48,7 +22,7 @@ describe('store', () => {
 
 	describe('content slice', () => {
 		it('sets and retrieves items', () => {
-			useStore.getState().setItems(mockItems);
+			useStore.getState().setItems(mockContentItems);
 			expect(useStore.getState().items).toHaveLength(2);
 		});
 
@@ -58,7 +32,7 @@ describe('store', () => {
 		});
 
 		it('filters items by selected category', () => {
-			useStore.getState().setItems(mockItems);
+			useStore.getState().setItems(mockContentItems);
 			useStore.getState().setSelectedCategoryId(1);
 			const filtered = useStore.getState().getFilteredItems();
 			expect(filtered).toHaveLength(1);
@@ -66,7 +40,7 @@ describe('store', () => {
 		});
 
 		it('returns all items when no category selected', () => {
-			useStore.getState().setItems(mockItems);
+			useStore.getState().setItems(mockContentItems);
 			useStore.getState().setSelectedCategoryId(null);
 			const filtered = useStore.getState().getFilteredItems();
 			expect(filtered).toHaveLength(2);
@@ -93,22 +67,6 @@ describe('store', () => {
 	});
 
 	describe('app content slice', () => {
-		const mockAppContent: AppContent = {
-			version: '2024-01-15T10:30:00Z',
-			homepage: {
-				hero: {
-					title: 'Main Sales Deck',
-					description: 'Your complete resource',
-					image: null,
-					linkText: 'View Resource',
-					linkSlug: 'main-sales-deck',
-				},
-				faqs: [],
-				footerTagline: '',
-			},
-			pages: [],
-		};
-
 		it('defaults appContent to null', () => {
 			expect(useStore.getState().appContent).toBeNull();
 		});
@@ -118,8 +76,8 @@ describe('store', () => {
 		});
 
 		it('sets app content', () => {
-			useStore.getState().setAppContent(mockAppContent);
-			expect(useStore.getState().appContent).toEqual(mockAppContent);
+			useStore.getState().setAppContent(mockEmptyAppContent);
+			expect(useStore.getState().appContent).toEqual(mockEmptyAppContent);
 		});
 
 		it('sets app content loading state', () => {

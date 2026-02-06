@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { ContentItem, Category, SyncState, AppContent } from '@/types';
-
+import type { SyncState } from '@/types';
 import {
 	saveContentItems,
 	getContentItems,
@@ -13,36 +12,11 @@ import {
 	getAppContent,
 	clearDatabase,
 } from './db';
-
-const mockItems: ContentItem[] = [
-	{
-		id: 1,
-		title: 'Product Datasheet',
-		categoryId: 1,
-		type: 'pdf',
-		url: 'https://example.com/doc.pdf',
-		thumbnail: 'https://example.com/thumb.jpg',
-		fileSize: 245000,
-		checksum: 'abc123',
-		modified: '2024-01-10T08:00:00Z',
-	},
-	{
-		id: 2,
-		title: 'Installation Guide',
-		categoryId: 2,
-		type: 'pdf',
-		url: 'https://example.com/guide.pdf',
-		thumbnail: 'https://example.com/thumb2.jpg',
-		fileSize: 512000,
-		checksum: 'def456',
-		modified: '2024-01-11T08:00:00Z',
-	},
-];
-
-const mockCategories: Category[] = [
-	{ id: 1, name: 'Product Sheets', slug: 'product-sheets' },
-	{ id: 2, name: 'Guides', slug: 'guides' },
-];
+import {
+	mockContentItems,
+	mockCategories,
+	mockAppContent,
+} from '@/test/fixtures';
 
 describe('db service', () => {
 	beforeEach(async () => {
@@ -51,7 +25,7 @@ describe('db service', () => {
 
 	describe('saveContentItems / getContentItems', () => {
 		it('saves and retrieves content items', async () => {
-			await saveContentItems(mockItems);
+			await saveContentItems(mockContentItems);
 			const items = await getContentItems();
 			expect(items).toHaveLength(2);
 		});
@@ -62,9 +36,9 @@ describe('db service', () => {
 		});
 
 		it('updates modified items when saving new manifest', async () => {
-			await saveContentItems(mockItems);
-			const updatedItem = { ...mockItems[0], title: 'Updated Title' };
-			await saveContentItems([updatedItem, mockItems[1]]);
+			await saveContentItems(mockContentItems);
+			const updatedItem = { ...mockContentItems[0], title: 'Updated Title' };
+			await saveContentItems([updatedItem, mockContentItems[1]]);
 			const items = await getContentItems();
 			expect(items).toHaveLength(2);
 			const found = items.find((i) => i.id === 1);
@@ -72,9 +46,9 @@ describe('db service', () => {
 		});
 
 		it('removes deleted items when saving new manifest', async () => {
-			await saveContentItems(mockItems);
+			await saveContentItems(mockContentItems);
 			// Save only the second item - simulating first item was deleted
-			await saveContentItems([mockItems[1]]);
+			await saveContentItems([mockContentItems[1]]);
 			const items = await getContentItems();
 			expect(items).toHaveLength(1);
 			expect(items[0].id).toBe(2);
@@ -83,14 +57,14 @@ describe('db service', () => {
 
 	describe('getContentItemsByCategory', () => {
 		it('filters items by category id', async () => {
-			await saveContentItems(mockItems);
+			await saveContentItems(mockContentItems);
 			const items = await getContentItemsByCategory(1);
 			expect(items).toHaveLength(1);
 			expect(items[0].categoryId).toBe(1);
 		});
 
 		it('returns empty array for non-existent category', async () => {
-			await saveContentItems(mockItems);
+			await saveContentItems(mockContentItems);
 			const items = await getContentItemsByCategory(999);
 			expect(items).toEqual([]);
 		});
@@ -141,40 +115,6 @@ describe('db service', () => {
 	});
 
 	describe('saveAppContent / getAppContent', () => {
-		const mockAppContent: AppContent = {
-			version: '2024-01-15T10:30:00Z',
-			homepage: {
-				hero: {
-					title: 'Main Sales Deck',
-					description: 'Your complete resource',
-					image: {
-						url: 'https://example.com/hero.jpg',
-						thumbnail: 'https://example.com/hero-thumb.jpg',
-						alt: 'Hero image',
-					},
-					linkText: 'View Resource',
-					linkSlug: 'main-sales-deck',
-				},
-				faqs: [{ question: 'What is this?', answer: 'A sales app.' }],
-				footerTagline: 'Built for your team',
-			},
-			pages: [
-				{
-					slug: 'main-sales-deck',
-					title: 'Main Sales Deck',
-					hero: {
-						title: 'Sales Deck',
-						description: 'Complete overview',
-						image: null,
-					},
-					applications: [],
-					video: { url: '', title: '', description: '' },
-					features: [],
-					caseStudies: [],
-				},
-			],
-		};
-
 		it('returns null when no app content exists', async () => {
 			const content = await getAppContent();
 			expect(content).toBeNull();

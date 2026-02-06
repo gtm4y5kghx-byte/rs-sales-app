@@ -7,55 +7,18 @@ import {
 	clearDatabase,
 } from '@/services/db';
 import { getCachedAsset, clearCache } from '@/services/cache';
-import type { ContentManifest, AppContent } from '@/types';
+import type { ContentManifest } from '@/types';
+import {
+	mockContentItems,
+	mockCategories,
+	mockEmptyAppContent,
+} from '@/test/fixtures';
 
 const mockManifest: ContentManifest = {
 	version: 'v1.0.0',
-	categories: [
-		{ id: 1, name: 'Products', slug: 'products' },
-		{ id: 2, name: 'Guides', slug: 'guides' },
-	],
-	items: [
-		{
-			id: 1,
-			title: 'Product Sheet',
-			categoryId: 1,
-			type: 'pdf',
-			url: 'https://example.com/product.pdf',
-			thumbnail: 'https://example.com/product-thumb.jpg',
-			fileSize: 1024,
-			checksum: 'abc123',
-			modified: '2024-01-01T00:00:00Z',
-		},
-		{
-			id: 2,
-			title: 'User Guide',
-			categoryId: 2,
-			type: 'pdf',
-			url: 'https://example.com/guide.pdf',
-			thumbnail: 'https://example.com/guide-thumb.jpg',
-			fileSize: 2048,
-			checksum: 'def456',
-			modified: '2024-01-02T00:00:00Z',
-		},
-	],
+	categories: mockCategories,
+	items: mockContentItems,
 	totalSize: 3072,
-};
-
-const mockAppContent: AppContent = {
-	version: 'v1.0.0',
-	homepage: {
-		hero: {
-			title: 'Test Hero',
-			description: '',
-			image: null,
-			linkText: '',
-			linkSlug: null,
-		},
-		faqs: [],
-		footerTagline: '',
-	},
-	pages: [],
 };
 
 const mockPdfBlob = new Blob(['%PDF-1.4 mock content'], {
@@ -81,7 +44,7 @@ describe('sync integration', () => {
 			if (url.includes('app-content')) {
 				return Promise.resolve({
 					ok: true,
-					json: () => Promise.resolve(mockAppContent),
+					json: () => Promise.resolve(mockEmptyAppContent),
 				});
 			}
 			return Promise.resolve({
@@ -104,7 +67,7 @@ describe('sync integration', () => {
 		expect(syncState.manifestVersion).toBe('v1.0.0');
 		expect(syncState.itemCount).toBe(2);
 
-		const cachedAsset = await getCachedAsset('https://example.com/product.pdf');
+		const cachedAsset = await getCachedAsset('https://example.com/doc.pdf');
 		expect(cachedAsset).not.toBeNull();
 
 		expect(onProgress).toHaveBeenCalled();
@@ -122,7 +85,7 @@ describe('sync integration', () => {
 			if (url.includes('app-content')) {
 				return Promise.resolve({
 					ok: true,
-					json: () => Promise.resolve(mockAppContent),
+					json: () => Promise.resolve(mockEmptyAppContent),
 				});
 			}
 			return Promise.resolve({
@@ -138,7 +101,7 @@ describe('sync integration', () => {
 		const items = await getContentItems();
 		expect(items).toHaveLength(2);
 
-		const cachedAsset = await getCachedAsset('https://example.com/product.pdf');
+		const cachedAsset = await getCachedAsset('https://example.com/doc.pdf');
 		expect(cachedAsset).not.toBeNull();
 	});
 
@@ -155,7 +118,7 @@ describe('sync integration', () => {
 			if (url.includes('app-content')) {
 				return Promise.resolve({
 					ok: true,
-					json: () => Promise.resolve(mockAppContent),
+					json: () => Promise.resolve(mockEmptyAppContent),
 				});
 			}
 			return Promise.resolve({
@@ -190,7 +153,7 @@ describe('sync integration', () => {
 			if (url.includes('app-content')) {
 				return Promise.resolve({
 					ok: true,
-					json: () => Promise.resolve(mockAppContent),
+					json: () => Promise.resolve(mockEmptyAppContent),
 				});
 			}
 			return Promise.resolve({
