@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 import SyncButton from '@/components/SyncButton';
 import HeroSection from '@/components/home/HeroSection';
 import CategoryCarouselSection from '@/components/home/CategoryCarouselSection';
-import ContentCarousel from '@/components/home/ContentCarousel';
+import CategoryQuickLinks from '@/components/home/CategoryQuickLinks';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
@@ -29,11 +29,13 @@ const HomePage = () => {
 		);
 	}
 
-	const videoItems = items.filter((item) => item.type === 'video');
+	const hasFaqs = (homepage?.faqs?.length ?? 0) > 0;
 
 	return (
 		<div className="space-y-8">
 			{homepage?.hero && <HeroSection hero={homepage.hero} />}
+
+			<CategoryQuickLinks categories={categories} hasFaqs={hasFaqs} />
 
 			{categories.map((category) => {
 				const categoryItems = items.filter(
@@ -47,18 +49,6 @@ const HomePage = () => {
 					/>
 				);
 			})}
-
-			{videoItems.length > 0 && (
-				<section id="video-resources">
-					<div className="mb-4 flex items-center justify-between">
-						<h2 className="text-lg font-bold uppercase tracking-wide">
-							Video Resources
-						</h2>
-						<span className="text-sm text-muted-foreground">View All</span>
-					</div>
-					<ContentCarousel items={videoItems} />
-				</section>
-			)}
 		</div>
 	);
 };

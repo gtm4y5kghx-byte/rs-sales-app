@@ -150,3 +150,9 @@
 		display: none;
 	}
 }
+
+/* Scroll margin for anchor navigation */
+[id^='category-'],
+#faq {
+	scroll-margin-top: 1.5rem;
+}
