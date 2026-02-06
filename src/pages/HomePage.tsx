@@ -5,6 +5,7 @@ import SyncButton from '@/components/SyncButton';
 import HeroSection from '@/components/home/HeroSection';
 import CategoryCarouselSection from '@/components/home/CategoryCarouselSection';
 import CategoryQuickLinks from '@/components/home/CategoryQuickLinks';
+import FAQAccordion from '@/components/home/FAQAccordion';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
@@ -49,6 +50,8 @@ const HomePage = () => {
 					/>
 				);
 			})}
+
+			{homepage?.faqs && <FAQAccordion faqs={homepage.faqs} />}
 		</div>
 	);
 };
