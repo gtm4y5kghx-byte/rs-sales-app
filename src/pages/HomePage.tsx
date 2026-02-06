@@ -1,15 +1,17 @@
 import { useContent } from '@/hooks/useContent';
+import { useAppContent } from '@/hooks/useAppContent';
 import { Loader2 } from 'lucide-react';
 import SyncButton from '@/components/SyncButton';
-import WelcomeBanner from '@/components/home/WelcomeBanner';
+import HeroSection from '@/components/home/HeroSection';
 import ContentCarousel from '@/components/home/ContentCarousel';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import { getRecentItems } from '@/lib/content-utils';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
+	const { homepage, isLoading: isAppContentLoading } = useAppContent();
 
-	if (isLoading) {
+	if (isLoading || isAppContentLoading) {
 		return (
 			<div className="flex h-full items-center justify-center">
 				<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -32,7 +34,7 @@ const HomePage = () => {
 
 	return (
 		<div className="space-y-8">
-			<WelcomeBanner />
+			{homepage?.hero && <HeroSection hero={homepage.hero} />}
 
 			{recentItems.length > 0 && (
 				<section>

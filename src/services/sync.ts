@@ -3,6 +3,7 @@ import { fetchManifest, fetchAppContent } from './api';
 import { cacheAsset, deleteAsset } from './cache';
 import {
 	getContentItems,
+	getAppContent,
 	saveContentItems,
 	saveCategories,
 	setSyncState,
@@ -119,10 +120,22 @@ export const syncContent = async (
 };
 
 export const checkForUpdates = async (): Promise<number> => {
-	const manifest = await fetchManifest();
-	const localItems = await getContentItems();
+	const [manifest, remoteAppContent] = await Promise.all([
+		fetchManifest(),
+		fetchAppContent(),
+	]);
+
+	const [localItems, localAppContent] = await Promise.all([
+		getContentItems(),
+		getAppContent(),
+	]);
+
 	const diff = compareManifests(localItems, manifest.items);
-	return diff.toAdd.length + diff.toUpdate.length + diff.toDelete.length;
+	const itemChanges = diff.toAdd.length + diff.toUpdate.length + diff.toDelete.length;
+
+	const appContentChanged = localAppContent?.version !== remoteAppContent.version ? 1 : 0;
+
+	return itemChanges + appContentChanged;
 };
 
 export const collectAppContentImageUrls = (content: AppContent): string[] => {

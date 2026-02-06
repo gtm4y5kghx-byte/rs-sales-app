@@ -9,18 +9,13 @@ import {
 	type ManifestDiff,
 } from './sync';
 import type { ContentItem, ContentManifest, AppContent } from '@/types';
+import {
+	mockContentItem,
+	mockAppContent,
+	mockEmptyAppContent,
+} from '@/test/fixtures';
 
-const baseItem: ContentItem = {
-	id: 1,
-	title: 'Product Sheet',
-	categoryId: 1,
-	type: 'pdf',
-	url: 'https://example.com/doc.pdf',
-	thumbnail: 'https://example.com/thumb.jpg',
-	fileSize: 1024,
-	checksum: 'abc123',
-	modified: '2024-01-01T00:00:00Z',
-};
+const baseItem = mockContentItem;
 
 describe('sync service', () => {
 	describe('compareManifests', () => {
@@ -160,41 +155,58 @@ describe('sync service', () => {
 	});
 
 	describe('checkForUpdates', () => {
+		const mockFetchForUpdates = (
+			manifest: ContentManifest,
+			appContent: AppContent = mockEmptyAppContent,
+		) => {
+			global.fetch = vi.fn().mockImplementation((url: string) => {
+				if (url.includes('app-content')) {
+					return Promise.resolve({
+						ok: true,
+						json: () => Promise.resolve(appContent),
+					});
+				}
+				return Promise.resolve({
+					ok: true,
+					json: () => Promise.resolve(manifest),
+				});
+			});
+		};
+
 		beforeEach(async () => {
 			const { clearDatabase } = await import('./db');
 			await clearDatabase();
 		});
 
 		it('returns count of pending changes', async () => {
-			const mockManifest: ContentManifest = {
+			const manifest: ContentManifest = {
 				version: 'v1.0.0',
 				categories: [{ id: 1, name: 'Docs', slug: 'docs' }],
 				items: [baseItem, { ...baseItem, id: 2 }],
 				totalSize: 2048,
 			};
 
-			global.fetch = vi.fn().mockResolvedValue({
-				ok: true,
-				json: () => Promise.resolve(mockManifest),
-			});
+			mockFetchForUpdates(manifest);
 
 			const count = await checkForUpdates();
 
-			expect(count).toBe(2);
+			// 2 new items + 1 app content (no local version)
+			expect(count).toBe(3);
 		});
 
 		it('returns 0 when local and remote match', async () => {
-			const mockManifest: ContentManifest = {
+			const manifest: ContentManifest = {
 				version: 'v1.0.0',
 				categories: [],
 				items: [],
 				totalSize: 0,
 			};
 
-			global.fetch = vi.fn().mockResolvedValue({
-				ok: true,
-				json: () => Promise.resolve(mockManifest),
-			});
+			// Save local app content so versions match
+			const { saveAppContent } = await import('./db');
+			await saveAppContent(mockEmptyAppContent);
+
+			mockFetchForUpdates(manifest);
 
 			const count = await checkForUpdates();
 
@@ -202,47 +214,64 @@ describe('sync service', () => {
 		});
 
 		it('counts updates and deletes in total', async () => {
-			const mockManifest: ContentManifest = {
+			const manifest: ContentManifest = {
 				version: 'v2.0.0',
 				categories: [],
-				items: [{ ...baseItem, checksum: 'changed' }], // 1 update
+				items: [{ ...baseItem, checksum: 'changed' }],
 				totalSize: 1024,
 			};
 
-			global.fetch = vi.fn().mockResolvedValue({
-				ok: true,
-				json: () => Promise.resolve(mockManifest),
-			});
+			mockFetchForUpdates(manifest);
 
 			const count = await checkForUpdates();
 
 			expect(count).toBeGreaterThanOrEqual(1);
 		});
+
+		it('includes app content version change in count', async () => {
+			const manifest: ContentManifest = {
+				version: 'v1.0.0',
+				categories: [],
+				items: [],
+				totalSize: 0,
+			};
+
+			const updatedAppContent: AppContent = {
+				...mockEmptyAppContent,
+				version: 'v2.0.0',
+			};
+
+			mockFetchForUpdates(manifest, updatedAppContent);
+
+			const count = await checkForUpdates();
+
+			expect(count).toBe(1);
+		});
+
+		it('combines item changes and app content changes', async () => {
+			const manifest: ContentManifest = {
+				version: 'v1.0.0',
+				categories: [],
+				items: [baseItem],
+				totalSize: 1024,
+			};
+
+			const updatedAppContent: AppContent = {
+				...mockEmptyAppContent,
+				version: 'v2.0.0',
+			};
+
+			mockFetchForUpdates(manifest, updatedAppContent);
+
+			const count = await checkForUpdates();
+
+			expect(count).toBe(2);
+		});
 	});
 
 	describe('collectAppContentImageUrls', () => {
-		const baseAppContent: AppContent = {
-			version: '2024-01-15T10:30:00Z',
-			homepage: {
-				hero: {
-					title: 'Main Sales Deck',
-					description: 'Description',
-					image: {
-						url: 'https://example.com/hero.jpg',
-						thumbnail: 'https://example.com/hero-thumb.jpg',
-						alt: 'Hero',
-					},
-					linkText: 'View',
-					linkSlug: 'main',
-				},
-				faqs: [],
-				footerTagline: '',
-			},
-			pages: [],
-		};
-
 		it('extracts hero image URLs', () => {
-			const urls = collectAppContentImageUrls(baseAppContent);
+			const urls = collectAppContentImageUrls(mockAppContent);
 
 			expect(urls).toContain('https://example.com/hero.jpg');
 			expect(urls).toContain('https://example.com/hero-thumb.jpg');
@@ -250,7 +279,7 @@ describe('sync service', () => {
 
 		it('extracts page hero and section image URLs', () => {
 			const content: AppContent = {
-				...baseAppContent,
+				...mockAppContent,
 				pages: [
 					{
 						slug: 'test',
@@ -315,7 +344,7 @@ describe('sync service', () => {
 
 		it('deduplicates URLs', () => {
 			const content: AppContent = {
-				...baseAppContent,
+				...mockAppContent,
 				pages: [
 					{
 						slug: 'test',
