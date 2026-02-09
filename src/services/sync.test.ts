@@ -304,7 +304,7 @@ describe('sync service', () => {
 								},
 							},
 						],
-						video: { url: '', title: '', description: '' },
+						video: { title: '', url: '', poster: null, description: '' },
 						features: [
 							{
 								title: 'Feature 1',
@@ -359,7 +359,7 @@ describe('sync service', () => {
 							},
 						},
 						applications: [],
-						video: { url: '', title: '', description: '' },
+						video: { title: '', url: '', poster: null, description: '' },
 						features: [],
 						caseStudies: [],
 					},
@@ -394,7 +394,7 @@ describe('sync service', () => {
 						title: 'Test',
 						hero: { title: '', description: '', image: null },
 						applications: [{ title: '', description: '', image: null }],
-						video: { url: '', title: '', description: '' },
+						video: { title: '', url: '', poster: null, description: '' },
 						features: [
 							{
 								title: '',

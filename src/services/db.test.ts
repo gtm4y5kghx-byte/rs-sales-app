@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { SyncState } from '@/types';
+import type { AppContent, SyncState } from '@/types';
 import {
 	saveContentItems,
 	getContentItems,

@@ -71,8 +71,9 @@ export interface ApplicationCard {
 }
 
 export interface VideoContent {
-	url: string;
 	title: string;
+	url: string;
+	poster: AppContentImage | null;
 	description: string;
 }
 

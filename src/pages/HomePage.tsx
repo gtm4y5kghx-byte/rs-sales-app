@@ -51,7 +51,7 @@ const HomePage = () => {
 				);
 			})}
 
-			{homepage?.faqs && <FAQAccordion faqs={homepage.faqs} />}
+			{hasFaqs && <FAQAccordion faqs={homepage!.faqs} />}
 		</div>
 	);
 };
