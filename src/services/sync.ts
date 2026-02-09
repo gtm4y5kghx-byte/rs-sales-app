@@ -161,6 +161,11 @@ export const collectAppContentImageUrls = (content: AppContent): string[] => {
 			}
 		}
 
+		if (page.video.poster) {
+			urls.push(page.video.poster.url);
+			urls.push(page.video.poster.thumbnail);
+		}
+
 		for (const feature of page.features) {
 			if (feature.image) {
 				urls.push(feature.image.url);

@@ -9,7 +9,7 @@ import FAQAccordion from '@/components/home/FAQAccordion';
 
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
-	const { homepage, isLoading: isAppContentLoading } = useAppContent();
+	const { homepage, hasFaqs, isLoading: isAppContentLoading } = useAppContent();
 
 	if (isLoading || isAppContentLoading) {
 		return (
@@ -29,8 +29,6 @@ const HomePage = () => {
 			</div>
 		);
 	}
-
-	const hasFaqs = (homepage?.faqs?.length ?? 0) > 0;
 
 	return (
 		<div className="space-y-8">

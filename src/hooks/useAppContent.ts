@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useStore } from '@/store/store';
 import { getAppContent } from '@/services/db';
 
-export const useAppContent = () => {
+export const useAppContent = (slug?: string) => {
 	const appContent = useStore((state) => state.appContent);
 	const isLoading = useStore((state) => state.isAppContentLoading);
 	const setAppContent = useStore((state) => state.setAppContent);
@@ -18,10 +18,17 @@ export const useAppContent = () => {
 		loadAppContent();
 	}, [setAppContent, setAppContentLoading]);
 
+	const homepage = appContent?.homepage ?? null;
+	const pages = appContent?.pages ?? [];
+	const page = slug ? pages.find((p) => p.slug === slug) ?? null : null;
+	const hasFaqs = (homepage?.faqs?.length ?? 0) > 0;
+
 	return {
 		appContent,
-		homepage: appContent?.homepage ?? null,
-		pages: appContent?.pages ?? [],
+		homepage,
+		pages,
+		page,
+		hasFaqs,
 		isLoading,
 	};
 };
