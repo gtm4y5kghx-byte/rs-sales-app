@@ -56,6 +56,9 @@ export default defineConfig({
 			},
 		}),
 	],
+	preview: {
+		allowedHosts: ['.ngrok-free.dev'],
+	},
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, './src'),
