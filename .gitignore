@@ -28,6 +28,9 @@ CLAUDE.md
 Project-Plan.md
 Architecture.md
 
+#yarn
+.yarn/install-state.gz
+
 #env
 .env
 
