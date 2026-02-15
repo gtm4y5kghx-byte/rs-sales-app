@@ -45,7 +45,7 @@ export default defineConfig({
 						urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|gif|webp|pdf)$/,
 						handler: 'CacheFirst',
 						options: {
-							cacheName: 'assets-cache',
+							cacheName: 'rs-sales-assets',
 							expiration: {
 								maxEntries: 500,
 								maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
