@@ -7,7 +7,8 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const API_BASE = API_URL.replace(/\/content-manifest$/, '');
 
 const fetchWithAuth = async (url: string): Promise<Response> => {
-	const response = await fetch(url, {
+	const bustCache = `${url}${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
+	const response = await fetch(bustCache, {
 		headers: {
 			'X-RS-API-Key': API_KEY,
 		},
