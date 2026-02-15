@@ -33,6 +33,7 @@ Architecture.md
 
 #env
 .env
+.env.production
 
 # MARS PWA export
 MARS (Progressive Web App)
