@@ -13,9 +13,11 @@ const ContentSection = ({ title, items }: ContentSectionProps) => {
 
 	return (
 		<div className="flex h-full flex-col">
-			<h1 className="mb-4 text-xl font-semibold">
-				{title} ({results.length})
-			</h1>
+			<div className="-mx-6 mb-6 bg-rs-blue px-6 py-14 text-center">
+				<h1 className="text-3xl font-bold uppercase tracking-wide text-white">
+					{title}
+				</h1>
+			</div>
 			<SearchBar query={query} onChange={setQuery} />
 			{results.length === 0 && query && (
 				<p className="text-muted-foreground">No assets match "{query}".</p>
