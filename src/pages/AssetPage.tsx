@@ -43,6 +43,12 @@ const AssetPage = () => {
 				<h1 className="text-lg font-semibold">{item.title}</h1>
 			</header>
 
+			{item.description && (
+				<p className="py-3 text-sm text-muted-foreground">
+					{item.description}
+				</p>
+			)}
+
 			<div className="flex-1 overflow-hidden">
 				{item.type === 'pdf' && <PDFViewer url={item.url} />}
 				{item.type === 'image' && (

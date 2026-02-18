@@ -1,6 +1,7 @@
 export interface ContentItem {
 	id: number;
 	title: string;
+	description?: string;
 	categoryId: number;
 	type: 'pdf' | 'image' | 'video';
 	url: string;
