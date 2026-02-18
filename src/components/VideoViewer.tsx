@@ -40,10 +40,8 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 	}
 
 	return (
-		<div className="flex h-full items-center justify-center bg-black">
-			{isLoading && (
-				<p className="absolute text-white/60">Loading video...</p>
-			)}
+		<div className="flex h-full items-center justify-center bg-black py-8">
+			{isLoading && <p className="absolute text-white/60">Loading video...</p>}
 			<video
 				src={url}
 				title={title}

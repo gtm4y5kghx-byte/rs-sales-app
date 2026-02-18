@@ -35,8 +35,8 @@ const AssetPage = () => {
 	}
 
 	return (
-		<div className="flex h-full flex-col">
-			<header className="flex items-center gap-4 border-b p-4">
+		<div className="mx-auto flex h-full max-w-5xl flex-col">
+			<header className="flex items-center gap-1 border-b py-4">
 				<Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
 					<ArrowLeft className="h-4 w-4" />
 				</Button>

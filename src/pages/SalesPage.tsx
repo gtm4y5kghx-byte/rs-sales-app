@@ -28,7 +28,7 @@ const SalesPage = () => {
 	}
 
 	return (
-		<div className="space-y-12">
+		<div className="mx-auto max-w-5xl space-y-12">
 			<PageHero
 				title={page.hero.title}
 				description={page.hero.description}

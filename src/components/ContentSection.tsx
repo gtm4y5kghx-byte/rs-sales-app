@@ -14,15 +14,17 @@ const ContentSection = ({ title, items }: ContentSectionProps) => {
 	return (
 		<div className="flex h-full flex-col">
 			<div className="-mx-6 mb-6 bg-rs-blue px-6 py-14 text-center">
-				<h1 className="text-3xl font-bold uppercase tracking-wide text-white">
+				<h1 className="mx-auto max-w-5xl text-3xl font-bold uppercase tracking-wide text-white">
 					{title}
 				</h1>
 			</div>
-			<SearchBar query={query} onChange={setQuery} />
-			{results.length === 0 && query && (
-				<p className="text-muted-foreground">No assets match "{query}".</p>
-			)}
-			{results.length > 0 && <ContentGrid items={results} />}
+			<div className="mx-auto w-full max-w-5xl">
+				<SearchBar query={query} onChange={setQuery} />
+				{results.length === 0 && query && (
+					<p className="text-muted-foreground">No assets match "{query}".</p>
+				)}
+				{results.length > 0 && <ContentGrid items={results} />}
+			</div>
 		</div>
 	);
 };

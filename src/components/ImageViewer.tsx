@@ -44,7 +44,7 @@ const ImageViewer = ({ url, alt }: ImageViewerProps) => {
 	}
 
 	return (
-		<div className="flex h-full items-center justify-center overflow-auto">
+		<div className="flex h-full items-center justify-center overflow-auto py-8">
 			<img
 				src={src}
 				alt={alt}

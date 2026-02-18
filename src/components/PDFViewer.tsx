@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -19,6 +19,22 @@ const PDFViewer = ({ url }: PDFViewerProps) => {
 	const [numPages, setNumPages] = useState<number | null>(null);
 	const [pageNumber, setPageNumber] = useState(1);
 	const [error, setError] = useState<string | null>(null);
+	const [containerWidth, setContainerWidth] = useState<number | null>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const el = containerRef.current;
+		if (!el) return;
+
+		const observer = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				setContainerWidth(entry.contentRect.width);
+			}
+		});
+
+		observer.observe(el);
+		return () => observer.disconnect();
+	}, []);
 
 	const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
 		setNumPages(numPages);
@@ -65,7 +81,7 @@ const PDFViewer = ({ url }: PDFViewerProps) => {
 				</Button>
 			</div>
 
-			<div className="flex-1 overflow-auto">
+			<div ref={containerRef} className="flex-1 overflow-auto">
 				<Document
 					file={url}
 					onLoadSuccess={onDocumentLoadSuccess}
@@ -78,6 +94,7 @@ const PDFViewer = ({ url }: PDFViewerProps) => {
 				>
 					<Page
 						pageNumber={pageNumber}
+						width={containerWidth ?? undefined}
 						renderTextLayer={true}
 						renderAnnotationLayer={true}
 					/>
