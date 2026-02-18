@@ -81,7 +81,7 @@ const PDFViewer = ({ url }: PDFViewerProps) => {
 				</Button>
 			</div>
 
-			<div ref={containerRef} className="flex-1 overflow-auto">
+			<div ref={containerRef} className="flex-1 overflow-auto py-8">
 				<Document
 					file={url}
 					onLoadSuccess={onDocumentLoadSuccess}

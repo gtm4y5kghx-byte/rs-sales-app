@@ -40,17 +40,23 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 	}
 
 	return (
-		<div className="flex h-full items-center justify-center bg-black py-8">
-			{isLoading && <p className="absolute text-white/60">Loading video...</p>}
-			<video
-				src={url}
-				title={title}
-				controls
-				onLoadedData={handleLoadedData}
-				onError={handleError}
-				className="max-h-full max-w-full"
-				style={{ opacity: isLoading ? 0 : 1 }}
-			/>
+		<div className="py-8">
+			<div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+				{isLoading && (
+					<p className="absolute inset-0 flex items-center justify-center text-white/60">
+						Loading video...
+					</p>
+				)}
+				<video
+					src={url}
+					title={title}
+					controls
+					onLoadedData={handleLoadedData}
+					onError={handleError}
+					className="h-full w-full"
+					style={{ opacity: isLoading ? 0 : 1 }}
+				/>
+			</div>
 		</div>
 	);
 };
