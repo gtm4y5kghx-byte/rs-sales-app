@@ -10,7 +10,7 @@ export default defineConfig({
 		tailwindcss(),
 		VitePWA({
 			registerType: 'prompt',
-			includeAssets: ['favicon.ico'],
+			includeAssets: ['favicon.png'],
 			manifest: {
 				name: 'RS Sales',
 				short_name: 'RS Sales',
