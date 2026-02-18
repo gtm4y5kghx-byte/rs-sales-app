@@ -23,7 +23,7 @@ const CategoryCarouselSection = ({
 				</h2>
 				<Link
 					to={`/category/${category.id}`}
-					className="text-sm text-muted-foreground hover:text-foreground"
+					className="text-sm font-medium text-rs-blue hover:text-rs-blue/80"
 				>
 					View All
 				</Link>

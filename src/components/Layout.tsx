@@ -48,7 +48,7 @@ const Layout = () => {
 							<p className="text-sm">
 								© {currentYear} RS Technologies Inc. All rights reserved.
 							</p>
-							<p className="mt-1 text-xs text-white/50">Build: 2026-02-18a</p>
+							<p className="mt-1 text-xs text-white/50">Build: 2026-02-18b</p>
 						</div>
 					</div>
 				</footer>
