@@ -10,10 +10,12 @@ const CategoryQuickLinks = ({
 	hasFaqs,
 }: CategoryQuickLinksProps) => {
 	const scrollTo = (id: string) => {
-		document.getElementById(id)?.scrollIntoView({
-			behavior: 'smooth',
-			block: 'start',
-		});
+		const el = document.getElementById(id);
+		if (!el) return;
+		const header = document.querySelector('header');
+		const offset = header ? header.getBoundingClientRect().height + 16 : 0;
+		const top = el.getBoundingClientRect().top + window.scrollY - offset;
+		window.scrollTo({ top, behavior: 'smooth' });
 	};
 
 	return (
