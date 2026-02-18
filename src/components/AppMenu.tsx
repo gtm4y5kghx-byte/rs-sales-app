@@ -35,8 +35,8 @@ const AppMenu = () => {
 	return (
 		<Sheet>
 			<SheetTrigger asChild>
-				<Button variant="ghost" size="icon" className="h-10 w-10">
-					<Menu className="h-5 w-5" />
+				<Button variant="ghost" size="icon" className="h-12 w-12 bg-rs-blue/10 text-rs-blue hover:bg-rs-blue/20">
+					<Menu className="h-7 w-7" />
 				</Button>
 			</SheetTrigger>
 			<SheetContent>
@@ -67,7 +67,8 @@ const AppMenu = () => {
 
 						{pendingUpdates > 0 && (
 							<p className="text-sm font-medium text-blue-600">
-								{pendingUpdates} update{pendingUpdates !== 1 ? 's' : ''} available
+								{pendingUpdates} update{pendingUpdates !== 1 ? 's' : ''}{' '}
+								available
 							</p>
 						)}
 
