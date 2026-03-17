@@ -3,7 +3,7 @@ import { useAppContent } from '@/hooks/useAppContent';
 import { Loader2 } from 'lucide-react';
 import SyncButton from '@/components/SyncButton';
 import HeroSection from '@/components/home/HeroSection';
-import CategoryCarouselSection from '@/components/home/CategoryCarouselSection';
+import CategoryPreviewSection from '@/components/home/CategoryPreviewSection';
 import CategoryQuickLinks from '@/components/home/CategoryQuickLinks';
 import FAQAccordion from '@/components/home/FAQAccordion';
 
@@ -41,7 +41,7 @@ const HomePage = () => {
 					(item) => item.categoryId === category.id
 				);
 				return (
-					<CategoryCarouselSection
+					<CategoryPreviewSection
 						key={category.id}
 						category={category}
 						items={categoryItems}

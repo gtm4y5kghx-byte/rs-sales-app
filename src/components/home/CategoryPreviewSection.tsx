@@ -1,19 +1,21 @@
 import { Link } from 'react-router';
 import type { Category, ContentItem } from '@/types';
-import ContentCarousel from './ContentCarousel';
+import ContentCard from '@/components/ContentCard';
 
-interface CategoryCarouselSectionProps {
+interface CategoryPreviewSectionProps {
 	category: Category;
 	items: ContentItem[];
 }
 
-const CategoryCarouselSection = ({
+const CategoryPreviewSection = ({
 	category,
 	items,
-}: CategoryCarouselSectionProps) => {
+}: CategoryPreviewSectionProps) => {
 	if (items.length === 0) {
 		return null;
 	}
+
+	const previewItems = items.slice(0, 4);
 
 	return (
 		<section id={`category-${category.slug}`}>
@@ -28,9 +30,13 @@ const CategoryCarouselSection = ({
 					View All
 				</Link>
 			</div>
-			<ContentCarousel items={items} />
+			<div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+				{previewItems.map((item) => (
+					<ContentCard key={item.id} item={item} />
+				))}
+			</div>
 		</section>
 	);
 };
 
-export default CategoryCarouselSection;
+export default CategoryPreviewSection;
