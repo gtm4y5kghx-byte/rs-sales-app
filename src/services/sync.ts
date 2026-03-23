@@ -50,10 +50,14 @@ export const processDownloadQueue = async (
 ): Promise<void> => {
 	for (let i = 0; i < queue.length; i++) {
 		const item = queue[i];
+		console.log(`[sync] fetching: ${item.url} (type: ${item.type})`);
 		const response = await fetch(item.url);
+		console.log(`[sync] response: ${response.status} ${response.headers?.get('content-type')} (${response.headers?.get('content-length')} bytes)`);
 		const blob = await response.blob();
+		console.log(`[sync] blob: type=${blob.type} size=${blob.size}`);
 		try {
 			await cacheAsset(item.url, blob);
+			console.log(`[sync] cached: ${item.url}`);
 		} catch (error) {
 			if (
 				error instanceof DOMException &&

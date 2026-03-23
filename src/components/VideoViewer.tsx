@@ -9,14 +9,25 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
+	console.log(`[video] rendering: ${url}`);
+
 	const handleLoadedData = () => {
+		console.log(`[video] loaded successfully: ${url}`);
 		setIsLoading(false);
 		setError(null);
 	};
 
-	const handleError = () => {
+	const handleError = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+		const videoEl = e.currentTarget;
+		const mediaError = videoEl.error;
+		console.error(`[video] error loading: ${url}`, {
+			code: mediaError?.code,
+			message: mediaError?.message,
+			networkState: videoEl.networkState,
+			readyState: videoEl.readyState,
+		});
 		setIsLoading(false);
-		setError('Failed to load video');
+		setError(`Failed to load video (code: ${mediaError?.code}, ${mediaError?.message || 'unknown'})`);
 	};
 
 	if (error) {
