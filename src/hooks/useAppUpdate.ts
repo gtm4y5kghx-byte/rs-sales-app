@@ -22,6 +22,7 @@ export const useAppUpdate = () => {
 	useEffect(() => {
 		if (needRefresh) {
 			toast('App update available', {
+				id: 'app-update',
 				duration: Infinity,
 				action: {
 					label: 'Reload',
