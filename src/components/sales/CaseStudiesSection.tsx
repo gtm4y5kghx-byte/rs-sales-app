@@ -35,7 +35,7 @@ const CaseStudiesSection = ({ caseStudies }: CaseStudiesSectionProps) => {
 						)}
 						<Link
 							to={`/asset/${study.assetId}`}
-							className="mt-1 inline-block text-xs font-semibold uppercase tracking-wide text-[#1e3a5f] hover:underline"
+							className="mt-1 inline-block text-xs font-semibold uppercase tracking-wide text-rs-blue hover:underline"
 						>
 							View Case Study
 						</Link>

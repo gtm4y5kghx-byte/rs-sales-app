@@ -21,8 +21,8 @@ const FAQAccordion = ({ faqs }: FAQAccordionProps) => {
 				Frequently Asked Questions
 			</h2>
 			<Accordion type="single" collapsible className="w-full">
-				{faqs.map((faq, index) => (
-					<AccordionItem key={index} value={`faq-${index}`}>
+				{faqs.map((faq) => (
+					<AccordionItem key={faq.question} value={faq.question}>
 						<AccordionTrigger className="text-left">
 							{faq.question}
 						</AccordionTrigger>

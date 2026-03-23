@@ -16,7 +16,7 @@ const ApplicationsSection = ({ applications }: ApplicationsSectionProps) => {
 			</h2>
 			<div className="grid gap-6 sm:grid-cols-3">
 				{applications.map((app, index) => (
-					<div key={index} className="text-center">
+					<div key={app.title} className="text-center">
 						<div className="relative pb-4">
 							<div className="overflow-hidden rounded-lg">
 								{app.image && (
@@ -27,7 +27,7 @@ const ApplicationsSection = ({ applications }: ApplicationsSectionProps) => {
 									/>
 								)}
 							</div>
-							<span className="absolute bottom-0 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full bg-[#1e3a5f] text-sm font-bold text-white">
+							<span className="absolute bottom-0 left-1/2 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full bg-rs-blue text-sm font-bold text-white">
 								{index + 1}
 							</span>
 						</div>

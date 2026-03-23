@@ -8,7 +8,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ hero }: HeroSectionProps) => {
 	return (
-		<section className="rounded-lg bg-[#1e3a5f] p-6 text-white md:p-8">
+		<section className="rounded-lg bg-rs-blue p-6 text-white md:p-8">
 			<div className="grid gap-6 md:grid-cols-2 md:items-center">
 				<div>
 					<h1 className="text-2xl font-bold tracking-tight md:text-3xl">
@@ -21,7 +21,7 @@ const HeroSection = ({ hero }: HeroSectionProps) => {
 						<Button
 							asChild
 							variant="outline"
-							className="mt-6 border-white bg-transparent text-white hover:bg-white hover:text-[#1e3a5f]"
+							className="mt-6 border-white bg-transparent text-white hover:bg-white hover:text-rs-blue"
 						>
 							<Link to={`/resource/${hero.linkSlug}`}>{hero.linkText}</Link>
 						</Button>

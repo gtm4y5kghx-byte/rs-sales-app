@@ -1,10 +1,16 @@
 import { useEffect } from 'react';
 import { useStore } from '@/store/store';
+import { useShallow } from 'zustand/react/shallow';
 import { getAppContent } from '@/services/db';
 
 export const useAppContent = (slug?: string) => {
-	const appContent = useStore((state) => state.appContent);
-	const isLoading = useStore((state) => state.isAppContentLoading);
+	const { appContent, isLoading } = useStore(
+		useShallow((state) => ({
+			appContent: state.appContent,
+			isLoading: state.isAppContentLoading,
+		})),
+	);
+
 	const setAppContent = useStore((state) => state.setAppContent);
 	const setAppContentLoading = useStore((state) => state.setAppContentLoading);
 

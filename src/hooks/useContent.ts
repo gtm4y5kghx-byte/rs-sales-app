@@ -1,38 +1,40 @@
 import { useEffect } from 'react';
 import { useStore } from '@/store/store';
-import { getContentItems, getCategories, getAppContent } from '@/services/db';
+import { useShallow } from 'zustand/react/shallow';
+import { getContentItems, getCategories } from '@/services/db';
 
 export const useContent = () => {
-	const items = useStore((state) => state.items);
-	const categories = useStore((state) => state.categories);
-	const selectedCategoryId = useStore((state) => state.selectedCategoryId);
-	const isLoading = useStore((state) => state.isContentLoading);
+	const { items, categories, selectedCategoryId, isLoading, getFilteredItems } =
+		useStore(
+			useShallow((state) => ({
+				items: state.items,
+				categories: state.categories,
+				selectedCategoryId: state.selectedCategoryId,
+				isLoading: state.isContentLoading,
+				getFilteredItems: state.getFilteredItems,
+			})),
+		);
+
 	const setItems = useStore((state) => state.setItems);
 	const setCategories = useStore((state) => state.setCategories);
 	const setSelectedCategoryId = useStore(
 		(state) => state.setSelectedCategoryId,
 	);
 	const setContentLoading = useStore((state) => state.setContentLoading);
-	const getFilteredItems = useStore((state) => state.getFilteredItems);
-	const setAppContent = useStore((state) => state.setAppContent);
-	const setAppContentLoading = useStore((state) => state.setAppContentLoading);
 
 	useEffect(() => {
 		const loadContent = async () => {
-			const [items, categories, appContent] = await Promise.all([
+			const [items, categories] = await Promise.all([
 				getContentItems(),
 				getCategories(),
-				getAppContent(),
 			]);
 			setItems(items);
 			setCategories(categories);
-			setAppContent(appContent);
 			setContentLoading(false);
-			setAppContentLoading(false);
 		};
 
 		loadContent();
-	}, [setItems, setCategories, setContentLoading, setAppContent, setAppContentLoading]);
+	}, [setItems, setCategories, setContentLoading]);
 
 	return {
 		items,

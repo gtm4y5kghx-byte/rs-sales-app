@@ -1,64 +1,15 @@
 import { create } from 'zustand';
-import type {
-	ContentItem,
-	Category,
-	SyncStatus,
-	SyncProgress,
-	AppContent,
-} from '@/types';
+import { createContentSlice, type ContentSlice } from './content-slice';
+import { createSyncSlice, type SyncSlice } from './sync-slice';
+import {
+	createAppContentSlice,
+	type AppContentSlice,
+} from './app-content-slice';
 
-interface StoreState {
-	items: ContentItem[];
-	categories: Category[];
-	selectedCategoryId: number | null;
-	isContentLoading: boolean;
-	setItems: (items: ContentItem[]) => void;
-	setCategories: (categories: Category[]) => void;
-	setSelectedCategoryId: (id: number | null) => void;
-	setContentLoading: (loading: boolean) => void;
-	getFilteredItems: () => ContentItem[];
+export type StoreState = ContentSlice & SyncSlice & AppContentSlice;
 
-	syncStatus: SyncStatus;
-	syncProgress: SyncProgress | null;
-	lastSynced: string | null;
-	pendingUpdates: number;
-	setSyncStatus: (status: SyncStatus) => void;
-	setSyncProgress: (progress: SyncProgress | null) => void;
-	setLastSynced: (timestamp: string | null) => void;
-	setPendingUpdates: (count: number) => void;
-
-	appContent: AppContent | null;
-	isAppContentLoading: boolean;
-	setAppContent: (content: AppContent | null) => void;
-	setAppContentLoading: (loading: boolean) => void;
-}
-
-export const useStore = create<StoreState>((set, get) => ({
-	items: [],
-	categories: [],
-	selectedCategoryId: null,
-	isContentLoading: true,
-	setItems: (items) => set({ items }),
-	setCategories: (categories) => set({ categories }),
-	setSelectedCategoryId: (id) => set({ selectedCategoryId: id }),
-	setContentLoading: (loading) => set({ isContentLoading: loading }),
-	getFilteredItems: () => {
-		const { items, selectedCategoryId } = get();
-		if (selectedCategoryId === null) return items;
-		return items.filter((item) => item.categoryId === selectedCategoryId);
-	},
-
-	syncStatus: 'idle',
-	syncProgress: null,
-	lastSynced: null,
-	pendingUpdates: 0,
-	setSyncStatus: (status) => set({ syncStatus: status }),
-	setSyncProgress: (progress) => set({ syncProgress: progress }),
-	setLastSynced: (timestamp) => set({ lastSynced: timestamp }),
-	setPendingUpdates: (count) => set({ pendingUpdates: count }),
-
-	appContent: null,
-	isAppContentLoading: true,
-	setAppContent: (content) => set({ appContent: content }),
-	setAppContentLoading: (loading) => set({ isAppContentLoading: loading }),
+export const useStore = create<StoreState>((...a) => ({
+	...createContentSlice(...a),
+	...createSyncSlice(...a),
+	...createAppContentSlice(...a),
 }));

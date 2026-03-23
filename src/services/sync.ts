@@ -101,8 +101,8 @@ export const syncContent = async (
 			const response = await fetch(url);
 			const blob = await response.blob();
 			await cacheAsset(url, blob);
-		} catch {
-			// Non-fatal — app content images are not critical for offline use
+		} catch (error) {
+			console.warn(`[sync] failed to cache app content image: ${url}`, error);
 		}
 	}
 

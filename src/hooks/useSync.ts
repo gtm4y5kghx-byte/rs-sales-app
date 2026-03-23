@@ -1,4 +1,5 @@
 import { useStore } from '@/store/store';
+import { useShallow } from 'zustand/react/shallow';
 import {
 	syncContent,
 	checkForUpdates as checkForUpdatesService,
@@ -6,13 +7,18 @@ import {
 import { getContentItems, getCategories, getAppContent } from '@/services/db';
 
 export const useSync = () => {
-	const status = useStore((state) => state.syncStatus);
-	const progress = useStore((state) => state.syncProgress);
-	const lastSynced = useStore((state) => state.lastSynced);
+	const { status, progress, lastSynced, pendingUpdates } = useStore(
+		useShallow((state) => ({
+			status: state.syncStatus,
+			progress: state.syncProgress,
+			lastSynced: state.lastSynced,
+			pendingUpdates: state.pendingUpdates,
+		})),
+	);
+
 	const setSyncStatus = useStore((state) => state.setSyncStatus);
 	const setSyncProgress = useStore((state) => state.setSyncProgress);
 	const setLastSynced = useStore((state) => state.setLastSynced);
-	const pendingUpdates = useStore((state) => state.pendingUpdates);
 	const setPendingUpdates = useStore((state) => state.setPendingUpdates);
 	const setItems = useStore((state) => state.setItems);
 	const setCategories = useStore((state) => state.setCategories);
