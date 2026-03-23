@@ -15,18 +15,13 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 		let blobUrl: string | null = null;
 
 		const loadVideo = async () => {
-			console.log(`[video] loading: ${url}`);
-
 			// Try cache first (bypasses service worker — required for iOS Safari)
 			const cached = await getCachedAsset(url);
 			if (cached) {
-				console.log(`[video] found in cache: type=${cached.type} size=${cached.size}`);
 				blobUrl = URL.createObjectURL(cached);
 				setVideoSrc(blobUrl);
 				return;
 			}
-
-			console.log(`[video] not in cache, using direct URL`);
 			setVideoSrc(url);
 		};
 
@@ -40,24 +35,13 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 	}, [url]);
 
 	const handleLoadedData = () => {
-		console.log(`[video] loaded successfully: ${url}`);
 		setIsLoading(false);
 		setError(null);
 	};
 
-	const handleError = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-		const videoEl = e.currentTarget;
-		const mediaError = videoEl.error;
-		console.error(`[video] error loading: ${url}`, {
-			code: mediaError?.code,
-			message: mediaError?.message,
-			networkState: videoEl.networkState,
-			readyState: videoEl.readyState,
-		});
+	const handleError = () => {
 		setIsLoading(false);
-		setError(
-			`Failed to load video (code: ${mediaError?.code}, ${mediaError?.message || 'unknown'})`,
-		);
+		setError('Failed to load video');
 	};
 
 	if (error) {

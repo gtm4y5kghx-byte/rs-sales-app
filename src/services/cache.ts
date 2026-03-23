@@ -16,21 +16,13 @@ const CACHE_NAME = 'rs-sales-assets';
 
 export const cacheAsset = async (url: string, blob: Blob): Promise<void> => {
 	const cache = await caches.open(CACHE_NAME);
-	const headers = {
-		'Content-Type': blob.type || 'application/octet-stream',
-		'Content-Length': blob.size.toString(),
-	};
-	console.log(`[cache] storing: ${url}`, headers);
-	const response = new Response(blob, { headers });
+	const response = new Response(blob, {
+		headers: {
+			'Content-Type': blob.type || 'application/octet-stream',
+			'Content-Length': blob.size.toString(),
+		},
+	});
 	await cache.put(url, response);
-
-	// Verify it was actually stored
-	const verify = await cache.match(url);
-	if (verify) {
-		console.log(`[cache] verified: ${url} (status=${verify.status}, content-type=${verify.headers.get('content-type')}, content-length=${verify.headers.get('content-length')})`);
-	} else {
-		console.error(`[cache] FAILED to verify: ${url} — not found after put()`);
-	}
 };
 
 export const getCachedAsset = async (url: string): Promise<Blob | null> => {
