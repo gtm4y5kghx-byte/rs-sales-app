@@ -42,7 +42,7 @@ export default defineConfig({
 				globPatterns: ['**/*.{js,mjs,css,html,ico,png,svg,woff2}'],
 				runtimeCaching: [
 					{
-						urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|gif|webp|pdf)$/,
+						urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|gif|webp|pdf|mp4)$/,
 						handler: 'CacheFirst',
 						options: {
 							cacheName: 'rs-sales-assets',
