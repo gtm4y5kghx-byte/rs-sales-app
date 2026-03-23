@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { WifiOff } from 'lucide-react';
 
 interface VideoViewerProps {
 	url: string;
@@ -8,7 +6,6 @@ interface VideoViewerProps {
 }
 
 const VideoViewer = ({ url, title }: VideoViewerProps) => {
-	const isOnline = useOnlineStatus();
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -21,15 +18,6 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 		setIsLoading(false);
 		setError('Failed to load video');
 	};
-
-	if (!isOnline) {
-		return (
-			<div className="flex h-full flex-col items-center justify-center gap-4 text-muted-foreground">
-				<WifiOff className="h-12 w-12" />
-				<p>Video requires internet connection</p>
-			</div>
-		);
-	}
 
 	if (error) {
 		return (

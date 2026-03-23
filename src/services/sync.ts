@@ -41,10 +41,7 @@ export const compareManifests = (
 };
 
 export const buildDownloadQueue = (diff: ManifestDiff): ContentItem[] => {
-	// Skip videos - they stream only, not cached for offline use
-	return [...diff.toAdd, ...diff.toUpdate].filter(
-		(item) => item.type !== 'video',
-	);
+	return [...diff.toAdd, ...diff.toUpdate];
 };
 
 export const processDownloadQueue = async (
