@@ -54,7 +54,7 @@ const Layout = () => {
 								<p className="text-sm">
 									© {currentYear} RS Technologies Inc. All rights reserved.
 								</p>
-								<p className="mt-1 text-xs text-white/50">Build: 2026-03-23b</p>
+								<p className="mt-1 text-xs text-white/50">Build: 2026-03-23c</p>
 							</div>
 							<button
 								onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

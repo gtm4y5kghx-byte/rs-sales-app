@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getCachedAsset } from '@/services/cache';
 
 interface VideoViewerProps {
 	url: string;
@@ -6,10 +7,37 @@ interface VideoViewerProps {
 }
 
 const VideoViewer = ({ url, title }: VideoViewerProps) => {
+	const [videoSrc, setVideoSrc] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	console.log(`[video] rendering: ${url}`);
+	useEffect(() => {
+		let blobUrl: string | null = null;
+
+		const loadVideo = async () => {
+			console.log(`[video] loading: ${url}`);
+
+			// Try cache first (bypasses service worker — required for iOS Safari)
+			const cached = await getCachedAsset(url);
+			if (cached) {
+				console.log(`[video] found in cache: type=${cached.type} size=${cached.size}`);
+				blobUrl = URL.createObjectURL(cached);
+				setVideoSrc(blobUrl);
+				return;
+			}
+
+			console.log(`[video] not in cache, using direct URL`);
+			setVideoSrc(url);
+		};
+
+		loadVideo();
+
+		return () => {
+			if (blobUrl) {
+				URL.revokeObjectURL(blobUrl);
+			}
+		};
+	}, [url]);
 
 	const handleLoadedData = () => {
 		console.log(`[video] loaded successfully: ${url}`);
@@ -27,7 +55,9 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 			readyState: videoEl.readyState,
 		});
 		setIsLoading(false);
-		setError(`Failed to load video (code: ${mediaError?.code}, ${mediaError?.message || 'unknown'})`);
+		setError(
+			`Failed to load video (code: ${mediaError?.code}, ${mediaError?.message || 'unknown'})`,
+		);
 	};
 
 	if (error) {
@@ -46,15 +76,17 @@ const VideoViewer = ({ url, title }: VideoViewerProps) => {
 						Loading video...
 					</p>
 				)}
-				<video
-					src={url}
-					title={title}
-					controls
-					onLoadedData={handleLoadedData}
-					onError={handleError}
-					className="h-full w-full"
-					style={{ opacity: isLoading ? 0 : 1 }}
-				/>
+				{videoSrc && (
+					<video
+						src={videoSrc}
+						title={title}
+						controls
+						onLoadedData={handleLoadedData}
+						onError={handleError}
+						className="h-full w-full"
+						style={{ opacity: isLoading ? 0 : 1 }}
+					/>
+				)}
 			</div>
 		</div>
 	);
