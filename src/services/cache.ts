@@ -16,7 +16,12 @@ const CACHE_NAME = 'rs-sales-assets';
 
 export const cacheAsset = async (url: string, blob: Blob): Promise<void> => {
 	const cache = await caches.open(CACHE_NAME);
-	const response = new Response(blob);
+	const response = new Response(blob, {
+		headers: {
+			'Content-Type': blob.type || 'application/octet-stream',
+			'Content-Length': blob.size.toString(),
+		},
+	});
 	await cache.put(url, response);
 };
 

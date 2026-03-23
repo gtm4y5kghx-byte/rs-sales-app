@@ -42,7 +42,7 @@ export default defineConfig({
 				globPatterns: ['**/*.{js,mjs,css,html,ico,png,svg,woff2}'],
 				runtimeCaching: [
 					{
-						urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|gif|webp|pdf|mp4)$/,
+						urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|gif|webp|pdf)$/,
 						handler: 'CacheFirst',
 						options: {
 							cacheName: 'rs-sales-assets',
@@ -50,6 +50,14 @@ export default defineConfig({
 								maxEntries: 500,
 								maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
 							},
+						},
+					},
+					{
+						urlPattern: /^https:\/\/.*\.mp4$/,
+						handler: 'CacheFirst',
+						options: {
+							cacheName: 'rs-sales-assets',
+							rangeRequests: true,
 						},
 					},
 				],
