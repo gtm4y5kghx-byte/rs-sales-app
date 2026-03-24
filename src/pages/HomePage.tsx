@@ -5,11 +5,9 @@ import SyncButton from '@/components/SyncButton';
 import HeroSection from '@/components/home/HeroSection';
 import CategoryPreviewSection from '@/components/home/CategoryPreviewSection';
 import CategoryQuickLinks from '@/components/home/CategoryQuickLinks';
-import FAQAccordion from '@/components/home/FAQAccordion';
-
 const HomePage = () => {
 	const { items, categories, isLoading } = useContent();
-	const { homepage, hasFaqs, isLoading: isAppContentLoading } = useAppContent();
+	const { homepage, isLoading: isAppContentLoading } = useAppContent();
 
 	if (isLoading || isAppContentLoading) {
 		return (
@@ -34,7 +32,7 @@ const HomePage = () => {
 		<div className="mx-auto max-w-5xl space-y-8">
 			{homepage?.hero && <HeroSection hero={homepage.hero} />}
 
-			<CategoryQuickLinks categories={categories} hasFaqs={hasFaqs} />
+			<CategoryQuickLinks categories={categories} />
 
 			{categories.map((category) => {
 				const categoryItems = items.filter(
@@ -49,7 +47,6 @@ const HomePage = () => {
 				);
 			})}
 
-			{hasFaqs && <FAQAccordion faqs={homepage!.faqs} />}
 		</div>
 	);
 };
