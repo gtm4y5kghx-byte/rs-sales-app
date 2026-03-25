@@ -54,6 +54,12 @@ export const processDownloadQueue = async (
 		const blob = await response.blob();
 		try {
 			await cacheAsset(item.url, blob);
+
+			if (item.thumbnail) {
+				const thumbResponse = await fetch(item.thumbnail);
+				const thumbBlob = await thumbResponse.blob();
+				await cacheAsset(item.thumbnail, thumbBlob);
+			}
 		} catch (error) {
 			if (
 				error instanceof DOMException &&

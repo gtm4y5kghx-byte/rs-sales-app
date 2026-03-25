@@ -164,7 +164,7 @@ describe('sync integration', () => {
 
 		await syncContent(vi.fn());
 
-		// Should have fetched manifest + app-content + only the changed item (3 calls total)
-		expect(fetch).toHaveBeenCalledTimes(3);
+		// Should have fetched manifest + app-content + changed item + its thumbnail (4 calls total)
+		expect(fetch).toHaveBeenCalledTimes(4);
 	});
 });
