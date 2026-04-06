@@ -25,7 +25,7 @@ const App = () => {
 				</Routes>
 			</BrowserRouter>
 			<Toaster
-				position="bottom-right"
+				position="top-center"
 				toastOptions={{
 					style: { width: 'auto' },
 				}}

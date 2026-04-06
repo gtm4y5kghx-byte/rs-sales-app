@@ -24,7 +24,6 @@ export const useAppUpdate = () => {
 			toast('App update available', {
 				id: 'app-update',
 				duration: Infinity,
-				position: 'top-center',
 				action: {
 					label: 'Reload',
 					onClick: () => updateServiceWorker(true),
