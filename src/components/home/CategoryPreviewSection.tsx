@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import type { Category, ContentItem } from '@/types';
 import ContentCard from '@/components/ContentCard';
+import { Button } from '@/components/ui/button';
 
 interface CategoryPreviewSectionProps {
 	category: Category;
@@ -23,12 +24,11 @@ const CategoryPreviewSection = ({
 				<h2 className="text-lg font-bold uppercase tracking-wide">
 					{category.name}
 				</h2>
-				<Link
-					to={`/category/${category.id}`}
-					className="text-sm font-medium text-rs-blue hover:text-rs-blue/80"
-				>
-					View All
-				</Link>
+				<Button variant="pill" asChild className="border-none bg-rs-blue text-white hover:bg-rs-blue/80">
+					<Link to={`/category/${category.id}`}>
+						View All
+					</Link>
+				</Button>
 			</div>
 			<div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
 				{previewItems.map((item) => (
