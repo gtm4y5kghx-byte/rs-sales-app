@@ -27,7 +27,7 @@ const App = () => {
 			<Toaster
 				position="bottom-right"
 				toastOptions={{
-					style: { width: 'auto', zIndex: 60 },
+					style: { width: 'auto' },
 				}}
 			/>
 		</>
