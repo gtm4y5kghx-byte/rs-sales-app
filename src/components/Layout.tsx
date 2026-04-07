@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { ChevronUp } from 'lucide-react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import AppMenu from '@/components/AppMenu';
+import GlobalSearch from '@/components/GlobalSearch';
 import { useStore } from '@/store/store';
 import rsLogo from '@/assets/rs_logo.png';
 
@@ -18,7 +19,10 @@ const Layout = () => {
 							<Link to="/">
 								<img src={rsLogo} alt="RS" className="h-16" />
 							</Link>
-							<AppMenu />
+							<div className="flex items-center gap-2">
+								<GlobalSearch />
+								<AppMenu />
+							</div>
 						</div>
 					</header>
 					<main className="p-6">

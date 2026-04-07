@@ -34,16 +34,18 @@ const HomePage = () => {
 
 			<CategoryQuickLinks categories={categories} />
 
-			{categories.map((category) => {
+			{categories.map((category, index) => {
 				const categoryItems = items.filter(
 					(item) => item.categoryId === category.id
 				);
 				return (
-					<CategoryPreviewSection
-						key={category.id}
-						category={category}
-						items={categoryItems}
-					/>
+					<div key={category.id}>
+						<CategoryPreviewSection
+							category={category}
+							items={categoryItems}
+						/>
+						{index < categories.length - 1 && <hr className="mt-8" />}
+					</div>
 				);
 			})}
 

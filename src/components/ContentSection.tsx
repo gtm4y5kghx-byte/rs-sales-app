@@ -19,7 +19,7 @@ const ContentSection = ({ title, items }: ContentSectionProps) => {
 				</h1>
 			</div>
 			<div className="mx-auto w-full max-w-5xl">
-				<SearchBar query={query} onChange={setQuery} />
+				<SearchBar query={query} onChange={setQuery} placeholder={`Search ${title} assets...`} />
 				{results.length === 0 && query && (
 					<p className="text-muted-foreground">No assets match "{query}".</p>
 				)}
