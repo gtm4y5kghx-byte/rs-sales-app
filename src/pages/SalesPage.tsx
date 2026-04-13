@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAppContent } from '@/hooks/useAppContent';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,6 @@ import CaseStudiesSection from '@/components/sales/CaseStudiesSection';
 
 const SalesPage = () => {
 	const { slug } = useParams<{ slug: string }>();
-	const navigate = useNavigate();
 	const { page, isLoading } = useAppContent(slug);
 
 	if (isLoading) {
@@ -41,7 +40,9 @@ const SalesPage = () => {
 			<FeaturesSection features={page.features} />
 			<CaseStudiesSection caseStudies={page.caseStudies} />
 			<div className="flex justify-center pt-4">
-				<Button onClick={() => navigate('/')}>Resources Page</Button>
+				<Button variant="pill" asChild className="border-none bg-rs-blue text-white hover:bg-rs-blue/80">
+					<Link to="/">Resources Page</Link>
+				</Button>
 			</div>
 		</div>
 	);
