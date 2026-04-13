@@ -1,6 +1,7 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAppContent } from '@/hooks/useAppContent';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import PageHero from '@/components/sales/PageHero';
 import ApplicationsSection from '@/components/sales/ApplicationsSection';
 import VideoSection from '@/components/sales/VideoSection';
@@ -9,6 +10,7 @@ import CaseStudiesSection from '@/components/sales/CaseStudiesSection';
 
 const SalesPage = () => {
 	const { slug } = useParams<{ slug: string }>();
+	const navigate = useNavigate();
 	const { page, isLoading } = useAppContent(slug);
 
 	if (isLoading) {
@@ -38,6 +40,9 @@ const SalesPage = () => {
 			<VideoSection video={page.video} />
 			<FeaturesSection features={page.features} />
 			<CaseStudiesSection caseStudies={page.caseStudies} />
+			<div className="flex justify-center pt-4">
+				<Button onClick={() => navigate('/')}>Resources Page</Button>
+			</div>
 		</div>
 	);
 };
