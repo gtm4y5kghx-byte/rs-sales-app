@@ -21,11 +21,11 @@ const PageHero = ({ title, description, image }: PageHeroProps) => {
 					)}
 				</div>
 				{image && (
-					<div className="overflow-hidden rounded-lg">
+					<div className="aspect-4/3 overflow-hidden rounded-lg">
 						<img
 							src={image.url}
 							alt={image.alt}
-							className="h-auto w-full object-cover"
+							className="h-full w-full object-cover"
 						/>
 					</div>
 				)}

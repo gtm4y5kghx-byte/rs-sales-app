@@ -24,11 +24,11 @@ const FeaturesSection = ({ features }: FeaturesSectionProps) => {
 							className="grid items-start gap-6 md:grid-cols-2"
 						>
 							{imageFirst && feature.image && (
-								<div className="overflow-hidden rounded-lg">
+								<div className="aspect-4/3 overflow-hidden rounded-lg">
 									<img
 										src={feature.image.url}
 										alt={feature.image.alt}
-										className="h-auto w-full object-cover"
+										className="h-full w-full object-cover"
 									/>
 								</div>
 							)}
@@ -69,11 +69,11 @@ const FeaturesSection = ({ features }: FeaturesSectionProps) => {
 								</dl>
 							</div>
 							{!imageFirst && feature.image && (
-								<div className="overflow-hidden rounded-lg">
+								<div className="aspect-4/3 overflow-hidden rounded-lg">
 									<img
 										src={feature.image.url}
 										alt={feature.image.alt}
-										className="h-auto w-full object-cover"
+										className="h-full w-full object-cover"
 									/>
 								</div>
 							)}
