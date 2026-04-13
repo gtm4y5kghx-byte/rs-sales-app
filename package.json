@@ -10,7 +10,7 @@
 		"preview": "vite preview",
 		"test": "vitest",
 		"test:run": "vitest run",
-		"deploy": "yarn build && npx wrangler pages deploy dist --project-name=rs-sales-app --branch=main"
+		"deploy": "npm run build && npx wrangler pages deploy dist --project-name=rs-sales-app --branch=main"
 	},
 	"dependencies": {
 		"@radix-ui/react-dialog": "^1.1.15",
